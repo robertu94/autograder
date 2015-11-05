@@ -11,22 +11,23 @@ def grade(settings):
     """
     Grade all of the projects
     """
-    results = []
+    results = {}
     for student in enumerate_students(settings)
-        results.insert((student,grade_student()))
-    report.report(results)
+        result = grade_student(settings, student)
+        results[student] =result
+    report.report(settings, results)
 
-def grade_student(student):
+def grade_student(settings, student):
     """
     Grade student a specific students work
     """
-    prepare.clean()
-    update.update()
-    build.build()
+    prepare.clean(settings, student)
+    update.update(settings, student)
+    build.build(settings, student)
     results = []
     for test in enumerate_tests(settings)
-        results.insert(grade.grade())
-    results = parse.parse(results)
+        result = run_test(settings, student, test)
+        results.insert(result)
     return results
 
 
@@ -49,3 +50,12 @@ def enumerate_tests(settings):
     """
     pass
 
+def run_test(settings, student, test):
+    """
+    Run a test on a students work
+    """
+    prepare.clean(settings, student)
+    output = run.run(student, test)
+    result = parse.parse(output, test)
+    score = score.score(result, test)
+    return output,result,score

@@ -8,7 +8,7 @@ This module is contains the main method for the module
 """
 import argparse
 
-from . import setup,grade_project
+from . import setup, grade_project
 
 def main():
     """

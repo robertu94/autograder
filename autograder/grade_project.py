@@ -12,9 +12,9 @@ def grade(settings):
     Grade all of the projects
     """
     results = {}
-    for student in enumerate_students(settings)
+    for student in enumerate_students(settings):
         result = grade_student(settings, student)
-        results[student] =result
+        results[student] = result
     report.report(settings, results)
 
 def grade_student(settings, student):
@@ -25,7 +25,7 @@ def grade_student(settings, student):
     update.update(settings, student)
     build.build(settings, student)
     results = []
-    for test in enumerate_tests(settings)
+    for test in enumerate_tests(settings):
         result = run_test(settings, student, test)
         results.insert(result)
     return results
@@ -57,5 +57,5 @@ def run_test(settings, student, test):
     prepare.clean(settings, student)
     output = run.run(student, test)
     result = parse.parse(output, test)
-    score = score.score(result, test)
-    return output,result,score
+    score = grader.score(result, test)
+    return output, result, score

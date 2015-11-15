@@ -5,13 +5,14 @@
 This module is part of the Clemson ACM Auto Grader
 
 This module is responsible for parsing settings and building tests if necessary.
+This module also configures logging
 
 
 settings:
     project:
         method - method of enumerating class. It can be one of {"discover","file","manual"}
         file - if method is "file" the list of list of student usernames
-        student - if method is "manual" the student to test
+        student - if method is "manual" the username of the student to test
     prepare:
         method - type of clean to use. It can be one of {"git","hg","noop","svn","script"}
         command - when clean method is "script" the command to use to script

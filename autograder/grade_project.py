@@ -7,6 +7,9 @@ This module is part of the Clemson ACM Auto Grader
 This module provides utilities that allow for enumerating through student
 submissions.
 """
+import logging
+LOGGER = logging.getLogger(__name__)
+
 def grade(settings):
     """
     Grade all of the projects

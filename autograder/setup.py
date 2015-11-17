@@ -28,30 +28,41 @@ settings:
             command - when run method is "script" the command to use to run
                       this must output one of the passable formats
         parse:
-            method - type of parsing to preform. It can be one of {"json","csv","ini","tap","script"}
-            command - when grade method is "script" the command to use to parse results must output json
+            method - type of parsing to preform. It can be one of
+                {"json","csv","ini","tap","script"}
+            command - when grade method is "script" the command to use
+                to parse results must output json
         score:
-            method - how to score the parsed results. It can be one of {"passfail","pass","script"}
-            command - when grade method is "script" the command to use to parse results must output two integers
+            method - how to score the parsed results. It can be
+                one of {"passfail","pass","script"}
+            command - when grade method is "script" the command
+                to use to parse results must output two integers
                       separated by a space indicating points earned points possible
     reports[] - a list of one or more reporting tasks
         method - types of reporting to preform. It can be one of {"email","json","csv","script"}
         command - when the reporting method is "script" the command use to report the output
-        detail - amount of detail to report. It is a list that can contain {"output","result","score"}
+        detail - amount of detail to report. It is a list that can
+            contain {"output","result","score"}
     logging
         logfile - where output should be logged to disk
         file_verbosity - what level of output to show in the logfile
         console_verbosity - what level of output to show to the console
 """
-from . import logging
+import json
+import logging
+LOGGER = logging.getLogger(__name__)
 
 def parse_settings(options):
     """
     Read in additional settings from a specified settings file
 
     namespace options - the return value from parse_args
+    returns dict settings
     """
-    pass
+    settings = json.load(options.config_file)
+
+    return settings
+
 
 def setup_logging(settings):
     """
@@ -59,7 +70,46 @@ def setup_logging(settings):
 
     dict settings - the return value from parse_args
     """
-    pass
+    logconfig = {
+        'version': 1,
+        'formatters': {
+            'standard': {
+                'format': '%(levelname)s %(asctime)s %(name)s %(message)s'
+            },
+            'simple' : {
+                'format': '%(levelname)s %(message)s'
+            },
+        },
+        'handlers': {
+            'console' : {
+                'level': logging.getLevelName(settings['logging']['console_verbosity']),
+                'class': 'logging.StreamHandler',
+                'formatter': 'simple'
+            },
+            'file': {
+                'level': 'DEBUG',
+                'class': 'logging.FileHandler',
+                'filename': settings['logging']['logfile'],
+                'mode': 'a',
+                'formatter': 'standard'
+            },
+        },
+        'loggers': {
+            'autograder': {
+                'handlers': ['console'],
+                'propagate' : True,
+                'level': 'WARNING'
+            },
+            'autograder.grade_project': {
+                'handlers': ['console', 'file'],
+                'propagate' : False,
+                'level': 'DEBUG'
+            },
+        },
+    }
+
+    logging.config.dictConfig(logconfig)
+
 
 def prepare_enviroment(settings):
     """

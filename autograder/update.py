@@ -7,6 +7,8 @@ This module is part of the Clemson ACM Auto Grader
 
 This module is responsible for cloning and updating repositories.
 """
+import logging
+LOGGER = logging.getLogger(__name__)
 
 def update(settings, student):
     """

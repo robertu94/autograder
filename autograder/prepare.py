@@ -7,6 +7,8 @@ This module is part of the Clemson ACM Auto Grader
 This module is responsible for cleaning up the build environments
 and other preparation tasks.
 """
+import logging
+LOGGER = logging.getLogger(__name__)
 
 def clean(settings, student):
     """

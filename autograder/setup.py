@@ -13,6 +13,10 @@ settings:
         method - method of enumerating class. It can be one of {"discover","file","manual"}
         file - if method is "file" the list of list of student usernames
         student - if method is "manual" the username of the student to test
+        name - name of the project
+        testdir - directory of files that should be copied into the build
+            directory.  They will be copied into a '.autograder' directory at the
+            root of the repository.
     prepare:
         method - type of clean to use. It can be one of {"git","hg","noop","svn","script"}
         command - when clean method is "script" the command to use to script
@@ -20,11 +24,14 @@ settings:
         method - type of update to use. It can be one of {"git","hg","noop","svn","script"}
         command - when update method is "script" the command to use to clean
     build:
-        method - type of build method to use. It can be one of {"make","script"}
+        method - type of build method to use. It can be one of {"make","script","docker"}
         command - when build method is "script" the command to use to build
+        timeout - how long to allow the build to run, 5 seconds if not specified.
+        dockerfile - path to the dockerfile to be used in docker builds
     tests[] - a list of one or more test objects that contain
         run:
-            method - type of grading to preform. It can be one of {"bats","unittest","script"}
+            method - type of grading to preform. It can be one of
+                {"bats","unittest","script","docker"}
             command - when run method is "script" the command to use to run
                       this must output one of the passable formats
         parse:

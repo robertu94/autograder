@@ -18,7 +18,7 @@ settings:
             directory.  They will be copied into a '.autograder' directory at the
             root of the repository.
     prepare:
-        method - type of clean to use. It can be one of {"git","hg","noop","svn","script"}
+        method - type of clean to use. It can be one of {"git","hg","noop","svn","script", "docker"}
         command - when clean method is "script" the command to use to script
     update:
         method - type of update to use. It can be one of {"git","hg","noop","svn","script"}
@@ -42,7 +42,7 @@ settings:
         score:
             method - how to score the parsed results. It can be
                 one of {"passfail","pass","script"}
-            command - when grade method is "script" the command
+            command - when score method is "script" the command
                 to use to parse results must output two integers
                       separated by a space indicating points earned points possible
     reports[] - a list of one or more reporting tasks

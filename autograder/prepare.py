@@ -31,7 +31,16 @@ def clean_hg(settings, student):
     """
     LOGGER.info("Using hg to clean up the directory for student %s", student['username'])
 
-    cmd = "hg purge --all --dirs --files"
+    #Remove all untracked files and directories
+    #Override all options to enable the purge extension to clean the directory
+    cmd = "hg --config='extensions.purge=' purge --all --dirs --files"
+    timeout = int(settings['prepare']['timeout']) or 5
+
+    subprocess.check_call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                          shell=True, timeout=timeout, cwd=student['directory'])
+
+    #Undo any changes to tracked files made since the last commit
+    cmd = "hg update -C"
     timeout = int(settings['prepare']['timeout']) or 5
 
     subprocess.check_call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
@@ -43,7 +52,24 @@ def clean_git(settings, student):
     """
     LOGGER.info("Using git to clean up the directory for student %s", student['username'])
 
+    #Git by default will not clean sub directories that are also git repositories
+    #Setting this option will force the directories to be cleaned
+    force = settings['prepare']['git']['force'] or False
+
+    #First clean up untracked changes
     cmd = "git clean -xdf"
+
+    if force:
+        cmd += 'f'
+
+    timeout = int(settings['prepare']['timeout']) or 5
+
+    subprocess.check_call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                          shell=True, timeout=timeout, cwd=student['directory'])
+
+    #Clean up tracked changes
+    cmd = "git reset HEAD --hard"
+
     timeout = int(settings['prepare']['timeout']) or 5
 
     subprocess.check_call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
@@ -62,7 +88,16 @@ def clean_svn(settings, student):
     """
     LOGGER.info("Using svn to clean up the directory")
 
-    cmd = "svn revert"
+    #Clean up up untracked files
+    #TODO this can be done more cleanly and should remove dependencies on awk and xargs
+    cmd = "svn st| awk /?/ {print $2}| xargs rm -rf"
+    timeout = int(settings['prepare']['timeout']) or 5
+
+    subprocess.check_call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                          shell=True, timeout=timeout, cwd=student['directory'])
+
+    #Clean up tracked changes
+    cmd = "svn -R revert ."
     timeout = int(settings['prepare']['timeout']) or 5
 
     subprocess.check_call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,

@@ -6,6 +6,12 @@ This module is part of the Clemson ACM Auto Grader
 
 This module is responsible for cleaning up the build environments
 and other preparation tasks.
+
+NOTE:
+    The Version Control System based cleaners (svn,git,hg) will clean all
+    directories except those that the version control system itself uses to
+    track state('.svn','.git',and '.hg' respectfully).  If you are concerned
+    about this possibility, use the soscript based preparer.
 """
 import subprocess
 import logging
@@ -90,7 +96,7 @@ def clean_svn(settings, student):
 
     #Clean up up untracked files
     #TODO this can be done more cleanly and should remove dependencies on awk and xargs
-    cmd = "svn st| awk /?/ {print $2}| xargs rm -rf"
+    cmd = "svn st| awk '/?/ {print $2}'| xargs rm -rf"
     timeout = int(settings['prepare']['timeout']) or 5
 
     subprocess.check_call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
@@ -122,7 +128,7 @@ def clean_docker(settings, student):
     LOGGER.info('Beginning a docker clean up for student %s', student['username'])
 
     cmd = "docker rm {student}_{project}"
-    cmd.format(studnet=student['username'], project=settings['project']['name'])
+    cmd = cmd.format(studnet=student['username'], project=settings['project']['name'])
     timeout = int(settings['prepare']['timeout']) or 5
 
     subprocess.check_call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,

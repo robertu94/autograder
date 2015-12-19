@@ -31,20 +31,35 @@ settings:
     tests[] - a list of one or more test objects that contain
         run:
             method - type of grading to preform. It can be one of
-                {"bats","unittest","script","docker"}
+                {"script","docker"}
             command - when run method is "script" the command to use to run
                       this must output one of the passable formats
+            input - what input to pass to the script
+            timeout - how long to run the test, 5 seconds if not specified.
+            stderr - how to handle standard error, it can be separate, combined
+                with stdout, or dropped
         parse:
             method - type of parsing to preform. It can be one of
-                {"json","csv","ini","tap","script"}
+                {"tap","script"}
+            input - when the parse method is script, what input format to use
+                It can be one of {"json"}
+            output - when the parse method is script, what output format to use
+                It can be one of {"json"}
             command - when grade method is "script" the command to use
-                to parse results must output json
+                to parse results
+            timeout - how long to run the test, 5 seconds if not specified.
         score:
             method - how to score the parsed results. It can be
-                one of {"passfail","pass","script"}
+                one of {"passfail","points","script"}
             command - when score method is "script" the command
-                to use to parse results must output two integers
-                      separated by a space indicating points earned points possible
+                to use to parse results must output two integers to stdout
+                separated by a space indicating points earned and points possible
+            input - when the parse method is script, what input format to use
+                It can be one of {"json"}
+            timeout - how long to run the test, 5 seconds if not specified.
+            min_points - the minimum number of points that will be assigned for this section
+            free_points - the number of points that are essentially extra
+            points_possible - maximum number of points possible for this test
     reports[] - a list of one or more reporting tasks
         method - types of reporting to preform. It can be one of {"email","json","csv","script"}
         command - when the reporting method is "script" the command use to report the output

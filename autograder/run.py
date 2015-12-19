@@ -10,11 +10,40 @@ import logging
 import subprocess
 import time
 LOGGER = logging.getLogger(__name__)
+STDERR = {
+    "yes": subprocess.PIPE,
+    "no": subprocess.DEVNULL,
+    "join": subprocess.STDOUT,
+    "stdout": subprocess.STDOUT,
+    "pipe": subprocess.PIPE,
+    "devnull":subprocess.PIPE
+    }
 
-
-def run_script(cmd, cmd_input=None, cwd=None, timeout=5, stderr=subprocess.PIPE):
+def run(settings, student, test):
     """
-    Internal run command that passes requested commands
+    Runs a script
+    """
+    runners = {
+        'script': run_script
+        }
+    runners[settings['tests'][test]['score']['method']](settings, student, test)
+
+def run_script(settings, student, test):
+    """
+    Runs a script to execute a test
+    """
+    cmd = settings['tests'][test]['score']['command']
+    cmd_input = settings['tests'][test]['score']['input']
+    directory = student['directory']
+    timeout = settings['tests'][test]['score']['timeout']
+    stderr = STDERR[settings['tests'][test]['score']['stderr']]
+
+    return run_cmd(cmd, cmd_input, directory, timeout, stderr)
+
+
+def run_cmd(cmd, cmd_input=None, cwd=None, timeout=5, stderr=subprocess.PIPE):
+    """
+    Internal run command that passes requested options
 
     params:
         str cmd - the command that should be executed

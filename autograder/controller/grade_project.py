@@ -7,7 +7,11 @@ This module is part of the Clemson ACM Auto Grader
 This module provides utilities that allow for enumerating through student
 submissions.
 """
+import os
 import logging
+from autograder.source import build, clean, clone, update
+from autograder.report import reports
+from autograder.test import run, score, parse
 LOGGER = logging.getLogger(__name__)
 
 def grade(settings):
@@ -18,21 +22,31 @@ def grade(settings):
     for student in enumerate_students(settings):
         result = grade_student(settings, student)
         results[student] = result
-    report.report(settings, results)
+    for report in enumerate_reports(settings):
+        reports.report(settings, report, results)
 
 def grade_student(settings, student):
     """
     Grade student a specific students work
     """
-    prepare.clean(settings, student)
+    if not os.path.exists(student['directory']):
+        clone.clone(settings, student)
+    clean.clean(settings, student)
     update.update(settings, student)
-    build.build(settings, student)
     results = []
     for test in enumerate_tests(settings):
         result = run_test(settings, student, test)
         results.insert(result)
     return results
 
+def enumerate_reports(settings):
+    """
+    Returns a list of all reports that can be detected for the project
+
+    return:
+        reports[] - list of reports that will be produced
+    """
+    pass
 
 
 def enumerate_students(settings):
@@ -57,8 +71,9 @@ def run_test(settings, student, test):
     """
     Run a test on a students work
     """
-    prepare.clean(settings, student)
-    output = run.run(student, test)
-    result = parse.parse(output, test)
-    score = grader.score(result, test)
-    return output, result, score
+    clean.clean(settings, student)
+    build.build(settings, student)
+    output = run.run(settings, student, test)
+    result = parse.parse(settings, output, test)
+    points = score.score(settings, result, output, test)
+    return output, result, points

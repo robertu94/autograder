@@ -8,7 +8,7 @@ This module is contains the main method for the module
 """
 import argparse
 
-from . import setup, grade_project
+from autograder.controller import setup, grade_project
 
 def main():
     """
@@ -33,5 +33,5 @@ def parse_args():
     """
     parser = argparse.ArgumentParser(prog="Auto Grader")
     parser.add_argument('config_file', type=argparse.FileType('r'),
-                        help='A path to the main configuration file')
+                        help='A path to the main configuration file', required=True)
     return parser.parse_args()

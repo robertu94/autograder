@@ -9,7 +9,7 @@ import subprocess
 import unittest
 from unittest import mock
 
-import build
+from autograder.source import build
 
 class BuildTests(unittest.TestCase):
     """
@@ -29,7 +29,7 @@ class BuildTests(unittest.TestCase):
             'project': {'name': 'testproject'}
         }
 
-    @mock.patch('build.subprocess.check_call')
+    @mock.patch('autograder.source.build.subprocess.check_call')
     def test_make(self, mock_check_call):
         """
         Test building a student project using make
@@ -39,7 +39,7 @@ class BuildTests(unittest.TestCase):
                                            stderr=subprocess.DEVNULL, timeout=5,
                                            cwd=self.student['directory'])
 
-    @mock.patch('build.subprocess.check_call')
+    @mock.patch('autograder.source.build.subprocess.check_call')
     def test_script(self, mock_check_call):
         """
         Test cleaning up with a script

@@ -17,6 +17,9 @@ settings:
         testdir - directory of files that should be copied into the build
             directory.  They will be copied into a '.autograder' directory at the
             root of the repository.
+        version - version of the settings module to use.  It should be an
+            integer.  It will be incremented whenever a change is made to the json
+            settings file interface
     prepare:
         method - type of clean to use. It can be one of {"git","hg","noop","svn","script", "docker"}
         command - when clean method is "script" the command to use to script
@@ -62,6 +65,13 @@ settings:
             points_possible - maximum number of points possible for this test
     reports[] - a list of one or more reporting tasks
         method - types of reporting to preform. It can be one of {"email","json","csv","script"}
+        destination - where to place the report.  For json and csv this should be a
+            path, for email this should be an email address.
+            This field can be expanded using the following format codes:
+            '%e' the students email address
+            '%u' the students username
+        separate - true when that separate reports should be
+            generated for each student
         command - when the reporting method is "script" the command use to report the output
         detail - amount of detail to report. It is a list that can
             contain {"output","result","score"}
@@ -73,6 +83,7 @@ settings:
 import json
 import logging
 LOGGER = logging.getLogger(__name__)
+DEFAULT_FILE = "/etc/autograder.conf"
 
 def parse_settings(options):
     """
@@ -82,6 +93,9 @@ def parse_settings(options):
     returns dict settings
     """
     settings = json.load(options.config_file)
+    with open(DEFAULT_FILE) as default_config:
+        defaults = json.load(default_config)
+    settings = merge(defaults, settings)
 
     return settings
 
@@ -132,6 +146,19 @@ def setup_logging(settings):
 
     logging.config.dictConfig(logconfig)
 
+def merge(defaults, dictionary):
+    """
+    recursively merge two dictionaries
+    """
+    for item in defaults:
+        try:
+            if isinstance(defaults[item], dict):
+                dictionary[item] = merge(defaults[item], dictionary[item])
+            else:
+                dictionary[item] = dictionary.get(item, defaults[item])
+        except KeyError:
+            dictionary[item] = defaults[item]
+    return dictionary
 
 def prepare_enviroment(settings):
     """

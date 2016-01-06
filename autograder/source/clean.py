@@ -11,7 +11,7 @@ NOTE:
     The Version Control System based cleaners (svn,git,hg) will clean all
     directories except those that the version control system itself uses to
     track state('.svn','.git',and '.hg' respectfully).  If you are concerned
-    about this possibility, use the soscript based preparer.
+    about this possibility, use the script based cleaner.
 """
 import subprocess
 import logging
@@ -21,7 +21,7 @@ def clean(settings, student):
     """
     Removes all trace of a students work and creates a new sandbox for testing
     """
-    preparer = {
+    cleaner = {
         'script': clean_script,
         'git': clean_git,
         'hg': clean_hg,
@@ -29,7 +29,7 @@ def clean(settings, student):
         'noop': clean_noop,
         'docker': clean_docker,
         }
-    preparer[settings['prepare']['method']](settings, student)
+    cleaner[settings['clean']['method']](settings, student)
 
 def clean_hg(settings, student):
     """
@@ -40,14 +40,14 @@ def clean_hg(settings, student):
     #Remove all untracked files and directories
     #Override all options to enable the purge extension to clean the directory
     cmd = "hg --config='extensions.purge=' purge --all --dirs --files"
-    timeout = int(settings['prepare']['timeout']) or 5
+    timeout = int(settings['clean']['timeout']) or 5
 
     subprocess.check_call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
                           shell=True, timeout=timeout, cwd=student['directory'])
 
     #Undo any changes to tracked files made since the last commit
     cmd = "hg update -C"
-    timeout = int(settings['prepare']['timeout']) or 5
+    timeout = int(settings['clean']['timeout']) or 5
 
     subprocess.check_call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
                           shell=True, timeout=timeout, cwd=student['directory'])
@@ -60,7 +60,7 @@ def clean_git(settings, student):
 
     #Git by default will not clean sub directories that are also git repositories
     #Setting this option will force the directories to be cleaned
-    force = settings['prepare']['git']['force'] or False
+    force = settings['clean']['git']['force'] or False
 
     #First clean up untracked changes
     cmd = "git clean -xdf"
@@ -68,7 +68,7 @@ def clean_git(settings, student):
     if force:
         cmd += 'f'
 
-    timeout = int(settings['prepare']['timeout']) or 5
+    timeout = int(settings['clean']['timeout']) or 5
 
     subprocess.check_call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
                           shell=True, timeout=timeout, cwd=student['directory'])
@@ -76,7 +76,7 @@ def clean_git(settings, student):
     #Clean up tracked changes
     cmd = "git reset HEAD --hard"
 
-    timeout = int(settings['prepare']['timeout']) or 5
+    timeout = int(settings['clean']['timeout']) or 5
 
     subprocess.check_call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
                           shell=True, timeout=timeout, cwd=student['directory'])
@@ -97,14 +97,14 @@ def clean_svn(settings, student):
     #Clean up up untracked files
     #TODO this can be done more cleanly and should remove dependencies on awk and xargs
     cmd = "svn st| awk '/?/ {print $2}'| xargs rm -rf"
-    timeout = int(settings['prepare']['timeout']) or 5
+    timeout = int(settings['clean']['timeout']) or 5
 
     subprocess.check_call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
                           shell=True, timeout=timeout, cwd=student['directory'])
 
     #Clean up tracked changes
     cmd = "svn -R revert ."
-    timeout = int(settings['prepare']['timeout']) or 5
+    timeout = int(settings['clean']['timeout']) or 5
 
     subprocess.check_call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
                           shell=True, timeout=timeout, cwd=student['directory'])
@@ -115,8 +115,8 @@ def clean_script(settings, student):
     """
     LOGGER.info('Beginning a Script to clean up for student %s', student['username'])
 
-    cmd = settings['prepare']['command']
-    timeout = int(settings['prepare']['timeout']) or 5
+    cmd = settings['clean']['command']
+    timeout = int(settings['clean']['timeout']) or 5
 
     subprocess.check_call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
                           shell=True, timeout=timeout, cwd=student['directory'])
@@ -129,7 +129,7 @@ def clean_docker(settings, student):
 
     cmd = "docker rm {student}_{project}"
     cmd = cmd.format(studnet=student['username'], project=settings['project']['name'])
-    timeout = int(settings['prepare']['timeout']) or 5
+    timeout = int(settings['clean']['timeout']) or 5
 
     subprocess.check_call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
                           shell=True, timeout=timeout, cwd=student['directory'])

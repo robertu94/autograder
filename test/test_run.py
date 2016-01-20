@@ -4,9 +4,8 @@ This module is part of the Clemson ACM Auto Grader
 This module is responsible for testing the run functionality
 """
 
-import subprocess
+import signal
 import unittest
-from unittest import mock
 
 from autograder.test import run
 
@@ -15,67 +14,152 @@ class RunTest(unittest.TestCase):
     Tests that verify the run functionality
     """
 
-    def setUp(self):
-        """
-        Create required mocks
-        """
-        patcher = mock.patch.object(run.subprocess.Popen, 'communicate', autospec=True)
-        self.mock_popen = patcher.start()
-        self.addCleanup(patcher.stop)
-
     def test_cmd(self):
         """
         Test running a script
         """
-        self.mock_popen.return_value = ("stdout", "stderr")
-        ret = run.run_cmd("foobar", "input", "/does/not/exist")
+        ret = run.run_cmd("./test_cmd.sh pass", "input", "./scripts")
         expected = {
-            "stdout": "stdout",
-            "stderr": "stderr",
+            "stdout": "stdout\n",
+            "stderr": "stderr\n",
             "return": 0,
-            "time": "stdout",
+            "time": 0.0,
             "error": False,
         }
-        self.assertEqual(expected, ret)
+        self.assert_similar_run_result(expected, ret)
 
     def test_cmd_timeout(self):
         """
         Test running a script
         """
-        self.mock_popen.side_effect = [
-            subprocess.TimeoutExpired("foobar", 5), ("stdout", "stderr")
-        ]
-        ret = run.run_cmd("foobar")
+        ret = run.run_cmd("./test_cmd.sh timeout", cwd="./scripts", timeout=1)
         expected = {
-            "stdout": "stdout",
-            "stderr": "stderr",
-            "return": 0,
-            "time": "stdout",
+            "stdout": "stdout\n",
+            "stderr": "stderr\n",
+            "return": -9,
+            "time": 1.0,
             "error": True,
         }
-        self.assertEqual(expected, ret)
+        self.assert_similar_run_result(expected, ret)
 
-    def test_cmd_directory_does_not_exist(self):
+    def test_cmd_nonexistant_directory(self):
         """
         Running a command in a directory that does not exist
         """
         with self.assertRaises(FileNotFoundError):
             run.run_cmd("foobar", cwd="/does/not/exist")
 
-    def test_script(self):
+    def test_script_pass(self):
         """
         Test running a script
         """
-        self.mock_popen.return_value = ("stdout", "stderr")
-        ret = run.run_script()
+        settings = {
+            "tests": [
+                {
+                    'score': {
+                        "command": "./test_cmd.sh pass",
+                        "input": "timeout",
+                        "timeout": 1.0,
+                        "stderr": "yes"
+                    }
+                }
+            ]
+        }
+        test = 0
+        student = {
+            "directory": "scripts",
+        }
+
+        #Run test
+        ret = run.run_script(settings, student, test)
+
+        expected = {
+            "stdout": "stdout\n",
+            "stderr": "stderr\n",
+            "return": 0,
+            "time": 0.0,
+            "error": False,
+        }
+        self.assert_similar_run_result(ret, expected)
+
+    def test_script_fail(self):
+        """
+        Test running a script
+        """
+        settings = {
+            "tests": [
+                {
+                    'score': {
+                        "command": "./test_cmd.sh fail",
+                        "input": "timeout",
+                        "timeout": 1.0,
+                        "stderr": "yes"
+                    }
+                }
+            ]
+        }
+        test = 0
+        student = {
+            "directory": "scripts",
+        }
+
+        #Run test
+        ret = run.run_script(settings, student, test)
+
+        expected = {
+            "stdout": "stdout\n",
+            "stderr": "stderr\n",
+            "return": 1,
+            "time": 0.0,
+            "error": False,
+        }
+        self.assert_similar_run_result(ret, expected)
+
 
     def test_script_timeout(self):
         """
         Test running a script that times out
         """
+        #Configure input
+        settings = {
+            "tests": [
+                {
+                    'score': {
+                        "command": "./test_cmd.sh timeout",
+                        "input": "timeout",
+                        "timeout": 1.0,
+                        "stderr": "yes"
+                    }
+                }
+            ]
+        }
+        test = 0
+        student = {
+            "directory": "scripts",
+        }
 
-        self.mock_popen.side_effect = [
-            subprocess.TimeoutExpired("foobar", 5), ("stdout", "stderr")
-        ]
-        ret = run.run_script()
+        #Run test
+        ret = run.run_script(settings, student, test)
+
+        expected = {
+            "stdout": "stdout\n",
+            "stderr": "stderr\n",
+            "return": -signal.SIGKILL.value,
+            "time": 1.0,
+            "error": True,
+        }
+        self.assert_similar_run_result(ret, expected)
+
+    def assert_similar_run_result(self, expected, result):
+        """
+        Tests if the test results are similar to what is expected
+
+        This method is necessary because the time element of scripts is
+        non-deterministic.
+        """
+        self.assertEqual(expected['stdout'], result['stdout'])
+        self.assertEqual(expected['stderr'], result['stderr'])
+        self.assertEqual(expected['return'], result['return'])
+        self.assertEqual(expected['error'], result['error'])
+        self.assertAlmostEqual(expected['time'], result['time'], places=1)
 

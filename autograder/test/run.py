@@ -7,6 +7,8 @@ This module is part of the Clemson ACM Auto Grader
 This module is responsible for running tests
 """
 import logging
+import os
+import signal
 import subprocess
 import time
 LOGGER = logging.getLogger(__name__)
@@ -62,18 +64,20 @@ def run_cmd(cmd, cmd_input=None, cwd=None, timeout=5, stderr=subprocess.PIPE):
 
     failed = False
     starttime = time.time()
-    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, cwd=cwd, stderr=stderr,
-                               shell=True, stdin=subprocess.PIPE, universal_newlines=True)
-    try:
-        output, error = process.communicate(cmd_input, timeout)
-        stoptime = time.time()
-    except subprocess.TimeoutExpired:
-        failed = True
-        process.kill()
-        output, error = process.communicate(cmd_input, timeout)
-        stoptime = time.time()
+    with subprocess.Popen(cmd, stdout=subprocess.PIPE, cwd=cwd, stderr=stderr,
+                          shell=True, stdin=subprocess.PIPE, universal_newlines=True) as process:
+        try:
+            output, error = process.communicate(cmd_input, timeout)
+            stoptime = time.time()
+        except subprocess.TimeoutExpired:
+            failed = True
+            process.kill()
+            output, error = process.communicate()
+            stoptime = time.time()
+
+    #POSIX specifies return negative the signal that killed the process if it was killed
     return {
-        "return": process.returncode,
+        "return": process.returncode if process.returncode != None else  -signal.SIGKILL.value,
         "stdout": output,
         "stderr": error,
         "time": stoptime-starttime,

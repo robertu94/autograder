@@ -26,21 +26,50 @@ def run(settings, student, test):
     Runs a script
     """
     runners = {
-        'script': run_script
+        'script': run_script,
+        'docker': run_docker
         }
-    runners[settings['tests'][test]['score']['method']](settings, student, test)
+    runners[settings['tests'][test]['run']['method']](settings, student, test)
 
 def run_script(settings, student, test):
     """
     Runs a script to execute a test
     """
-    cmd = settings['tests'][test]['score']['command']
-    cmd_input = settings['tests'][test]['score']['input']
+    cmd = settings['tests'][test]['run']['command']
+    cmd_input = settings['tests'][test]['run']['input']
     directory = student['directory']
-    timeout = settings['tests'][test]['score']['timeout']
-    stderr = STDERR[settings['tests'][test]['score']['stderr']]
+    timeout = settings['tests'][test]['run']['timeout']
+    stderr = STDERR[settings['tests'][test]['run']['stderr']]
 
     return run_cmd(cmd, cmd_input, directory, timeout, stderr)
+
+def run_docker(settings, student, test):
+    """
+    Runs a docker container to execute a test
+
+    some constraints that may be useful include; See docker-run for more details
+        --net=none <- disable networking
+        --memory=1024m <- limit the guest to 1gb ram
+        --memory-swap=1124m <- limit the guest's available swap to 100mb (1124m-1024m = 100m)
+        --read-only <- make the root file system readonly
+        --user <- set the user and group in the contianer (note you must create user/group)
+        --ulimit <- set the ulimit in the container
+        --device-read-iops=/dev/sda:1000 <- limit container to 1000 read operations per sec
+        --device-write-iops=/dev/sda:1000 <- limit container to 1000 write operations per sec
+
+    """
+    student = student['username']
+    project = settings['project']['name']
+    command = settings['tests'][test]['run']['command']
+    container = "{student}_{project}".format(student=student, project=project)
+    cmd_input = settings['tests'][test]['run']['input']
+    timeout = settings['tests'][test]['run']['timeout']
+    #TODO eventually accept a dictionary instead of a sequence of flags
+    constraints = settings['tests'][test]['run']['constaints']
+    cmd = "docker run --rm {constraints} {containter} {command}"
+    cmd = cmd.format(command=command, container=container, constraints=constraints)
+
+    return run_cmd(cmd, cmd_input, timeout=timeout)
 
 
 def run_cmd(cmd, cmd_input=None, cwd=None, timeout=5, stderr=subprocess.PIPE):

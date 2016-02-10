@@ -56,7 +56,7 @@ class RunTest(unittest.TestCase):
         settings = {
             "tests": [
                 {
-                    'score': {
+                    'run': {
                         "command": "./test_cmd.sh pass",
                         "input": "timeout",
                         "timeout": 1.0,
@@ -89,7 +89,7 @@ class RunTest(unittest.TestCase):
         settings = {
             "tests": [
                 {
-                    'score': {
+                    'run': {
                         "command": "./test_cmd.sh fail",
                         "input": "timeout",
                         "timeout": 1.0,
@@ -124,7 +124,7 @@ class RunTest(unittest.TestCase):
         settings = {
             "tests": [
                 {
-                    'score': {
+                    'run': {
                         "command": "./test_cmd.sh timeout",
                         "input": "timeout",
                         "timeout": 1.0,

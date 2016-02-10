@@ -39,6 +39,8 @@ settings:
                       this must output one of the passable formats
             input - what input to pass to the script
             timeout - how long to run the test, 5 seconds if not specified.
+            constraints - when run method "docker", a list of flags to pass to docker
+                to limit resources
             stderr - how to handle standard error, it can be separate, combined
                 with stdout, or dropped
         parse:
@@ -65,16 +67,20 @@ settings:
             points_possible - maximum number of points possible for this test
     reports[] - a list of one or more reporting tasks
         method - types of reporting to preform. It can be one of {"email","json","csv","script"}
+        source - where to send the report from output from for email
         destination - where to place the report.  For json and csv this should be a
             path, for email this should be an email address.
             This field can be expanded using the following format codes:
             '%e' the students email address
             '%u' the students username
+            '%d' the date
         separate - true when that separate reports should be
             generated for each student
+        subject - the subject when sent via email.
         command - when the reporting method is "script" the command use to report the output
         detail - amount of detail to report. It is a list that can
             contain {"output","result","score"}
+        summarize - include the summary
     logging
         logfile - where output should be logged to disk
         file_verbosity - what level of output to show in the logfile

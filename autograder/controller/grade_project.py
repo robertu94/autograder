@@ -76,4 +76,8 @@ def run_test(settings, student, test):
     output = run.run(settings, student, test)
     result = parse.parse(settings, output, test)
     points = score.score(settings, result, output, test)
-    return output, result, points
+    return {
+        "output": output,
+        "result": result,
+        "points": points
+    }

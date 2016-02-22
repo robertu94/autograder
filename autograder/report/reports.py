@@ -7,12 +7,10 @@ This module is part of the Clemson ACM Auto Grader
 This module is responsible for reporting student results in several different
 formats.
 """
-import json
 import logging
-import smtplib
 LOGGER = logging.getLogger(__name__)
 
-def report(settings, report, results):
+def report(settings, report_id, results):
     """
     Generate a variety of reports based on the data
     """
@@ -23,117 +21,43 @@ def report(settings, report, results):
         'csv' : report_csv,
         'script' : report_script,
     }
-    reporters[settings['reports'][report]['method']](settings, report, results)
+    reporters[settings['reports'][report_id]['method']](settings, report_id, results)
 
-def report_text(settings, results):
+def _report(settings, report, results):
     """
-    Generate a variety of reports based on the data and email it out
+    Backend that implements the various reporting modules
     """
-    dest = settings['report'][report]
-    message = format_human_report(settings['report'][report]['detail'], results)
+    seperate = settings["reports"][report]["seperate"]
+    if seperate:
+        for student in results:
+            generated_report = generate_report(results[student])
+            send_report(generated_report)
+    else:
+        generated_report = "".join([generate_report(results[student]) for student in results])
+        send_report(generated_report)
 
-    with open(dest, 'w') as outfile:
-        outfile.write(message)
+def send_report(dictionary):
+    """
+    input: text
+    output: none
+    actions:
+            -> sends report out to email
+            -> saves report to file
+            -> outputs report to stdout
+    """
+    return dictionary
 
-def report_email(settings,report, results):
+def generate_report(student_results):
     """
-    Generate a variety of reports based on the data and email it out
+    Generate_report
+            input: dictionary containing 1 students results
+            output: text
+            actions:
+                    -> take the dictionary and generate a human readable or machine readable report
+                            -> csv, json
+                            -> text
+                    -> filter out unnecessary sections
     """
-    from_address = settings['report'][report]['from']
-    to_address = settings['report'][report]['to']
-    message = format_human_report(settings['report'][report]['detail'], results)
-
-    with smtplib.SMTP('localhost') as mailer:
-        mailer.sendmail(from_address, to_address, message)
-
-
-
-def report_json(settings, report, results):
-    """
-    Generate a variety of reports based on the data and format it in JSON
-    """
-    dest = settings['report'][report]
-    message = format_human_report(settings['report'][report]['detail'], results)
-
-    with open(dest, 'w') as outfile:
-        json.dump(message, outfile)
-
-def report_csv(settings, report, results):
-    """
-    Generate a variety of reports based on the data and format it in csv
-    """
-    raise NotImplementedError
-
-def report_script(settings, report, results):
-    """
-    Generate a variety of reports based on the data and format it using a custom script
-    """
-    pass
-
-def format_human_report(detail, results):
-    """
-    Generate a string that will be used in the final report
-    params:
-        str detail - the level of detail for the report
-        str results - the results to be reported
-    """
-    FORMAT = {
-        "output": format_output,
-        "result": format_result,
-        "score": format_score
-        }
-    return "".join([FORMAT[key](results) for key in results if key in detail])
+    return str(student_results)
 
 
-def format_machine_report(detail, results):
-    """
-    for the dictionary based reporting styles (json,csv) generate the
-    dictionary that will returned in the final report
-    params:
-        str detail - the level of detail for the report
-        str results - the results to be reported
-    """
-    return {key:results[key] for key in results if key in detail}
-
-def format_output(results):
-    """
-    format the output section in a human readable format
-    """
-    output = results["output"]
-    return """stdout: {{stdout}}
-    stderr: {{stderr}}
-    return: {{returncode}}
-    time: {{time}}
-    error: {{error}}
-    """.format(stdout=output['stdout'], stderr=output['stderr'],
-               returncode=output['return'], time=output['time'],
-               error=output['error'])
-
-def format_result(results):
-    """
-    format the results section in a human readable format
-    """
-    result = results["result"]
-    return """passed: {{passed}}
-    failed: {{failed}},
-    skipped: {{error}},
-    total: {{total}}
-    """.format(passed=result['passed'], failed=result['failed'],
-               skipped=result['skipped'], total=result['total'])
-
-def format_score(results):
-    """
-    format the score section in a human readable format
-    """
-    score = results["score"]
-    return "{{earned}}/{{possible}}".format(earned=score['earned'], possible=score['possible'])
-
-def transform_dest(settings, dest):
-    """
-    transform the destination address to use format codes
-    """
-    user = "user"
-    email = "email"
-    dest = dest.replace('%u', user)
-    dest = dest.replace('%e', email)
-    return dest

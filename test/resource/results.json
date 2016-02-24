@@ -1,0 +1,88 @@
+{
+	"student1": [
+		{
+			"output": {
+				"stdout": "this is the stdout1\n",
+				"stderr": "this is the stderr1\n",
+				"return": 0,
+				"time": 1.2,
+				"error": false
+			},
+			"results": {
+				"passed": 7,
+				"failed": 1,
+				"skipped": 0,
+				"errors": 0,
+				"total": 8
+			},
+			"points": {
+				"earned": 7,
+				"possible": 8
+			}
+		},
+		{
+			"output": {
+				"stdout": "this is the stdout2\n",
+				"stderr": "this is the stderr2\n",
+				"return": 0,
+				"time": 1.2,
+				"error": false
+			},
+			"results": {
+				"passed": 7,
+				"failed": 1,
+				"skipped": 0,
+				"errors": 0,
+				"total": 8
+
+			},
+			"points": {
+				"earned": 7,
+				"possible": 8
+			}
+		}
+	],
+	"student2": [
+		{
+			"output": {
+				"stdout": "this is the stdout1 bar\n",
+				"stderr": "this is the stderr1 foo\n",
+				"return": 0,
+				"time": 1.2,
+				"error": false
+			},
+			"results": {
+				"passed": 5,
+				"failed": 3,
+				"skipped": 0,
+				"errors": 0,
+				"total": 8
+			},
+			"points": {
+				"earned": 5,
+				"possible": 8
+			}
+		},
+		{
+			"output": {
+				"stdout": "this is the stdout2 wrong\n",
+				"stderr": "this is the stderr2 wrong\n",
+				"return": 0,
+				"time": 1.3,
+				"error": false
+			},
+			"results": {
+				"passed": 4,
+				"failed": 4,
+				"skipped": 0,
+				"errors": 0,
+				"total": 8
+
+			},
+			"points": {
+				"earned": 4,
+				"possible": 8
+			}
+		}
+	]
+}

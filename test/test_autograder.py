@@ -26,51 +26,26 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-This module contains the functions related to build
+This module contains the functions related to autograder
 """
-import subprocess
 import unittest
-from unittest import mock
-
-from autograder.source import build
-
-class TestBuild(unittest.TestCase):
+class TestAutograder(unittest.TestCase):
     """
-    A series of tests that validate the build functionality
+    Test cases for test_autograder
     """
 
-    def setUp(self):
-        self.student = {
-            'username': 'test',
-            'directory': 'test/scratch'
-            }
+    @unittest.skip("Unimplemented")
+    def test_main (self):
+        """
+        A function to test the main functionality
+        """
+        pass
 
-        self.settings = {
-            'build': {
-                'timeout': 5,
-            },
-            'project': {'name': 'testproject'}
-        }
-
-    @mock.patch('autograder.source.build.subprocess.check_call')
-    def test_make(self, mock_check_call):
+    @unittest.skip("Unimplemented")
+    def test_parse_args (self):
         """
-        Test building a student project using make
+        A function to test the parse_args functionality
         """
-        build.build_make(self.settings, self.student)
-        mock_check_call.assert_called_with('make', stdout=subprocess.DEVNULL,
-                                           stderr=subprocess.DEVNULL, timeout=5,
-                                           cwd=self.student['directory'])
-
-    @mock.patch('autograder.source.build.subprocess.check_call')
-    def test_script(self, mock_check_call):
-        """
-        Test cleaning up with a script
-        """
-        self.settings['build']['command'] = 'date'
-        build.build_script(self.settings, self.student)
-        mock_check_call.assert_called_with('date', stdout=subprocess.DEVNULL,
-                                           stderr=subprocess.DEVNULL, shell=True, timeout=5,
-                                           cwd=self.student['directory'])
+        pass
 
 

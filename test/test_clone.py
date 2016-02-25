@@ -26,86 +26,53 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-This module contains the functions related to setup
+This module contains the functions related to clone
 """
 import unittest
-from autograder.controller import setup
-
-class TestSetup(unittest.TestCase):
+class TestClone(unittest.TestCase):
     """
-    Test cases for test_setup
+    Test cases for test_clone
     """
 
     @unittest.skip("Unimplemented")
-    def test_parse_settings (self):
+    def test_clone (self):
         """
-        A function to test the parse_settings functionality
-        """
-        pass
-
-    @unittest.skip("Unimplemented")
-    def test_setup_logging (self):
-        """
-        A function to test the setup_logging functionality
-        """
-        pass
-
-    def test_merge(self):
-        """
-        Test the merge function
-        """
-        default = {
-            'a': 1,
-            'b': 2,
-            'c': 3,
-            'd': {
-                'e': 4,
-                'f': "asdf",
-                'g': {
-                    "h": 5,
-                    "i": "j",
-                    },
-                'j': 5,
-                'k': "asdfasd"
-                }
-            }
-        testing = {
-            'a': 2,
-            'd': {
-                'e': 5,
-                'f': "adsf",
-                'k': "asdfasdfasdfadsf"
-                }
-            }
-        expected = {
-            'a': 2,
-            'b': 2,
-            'c': 3,
-            'd': {
-                'e': 5,
-                'f': "adsf",
-                'g': {
-                    "h": 5,
-                    "i": "j",
-                    },
-                'j': 5,
-                'k': "asdfasdfasdfadsf"
-                }
-            }
-        result = setup.merge(default, testing)
-        self.assertEqual(expected, result)
-
-    @unittest.skip("Unimplemented")
-    def test_prepare_enviroment (self):
-        """
-        A function to test the prepare_enviroment functionality
+        A function to test the clone functionality
         """
         pass
 
     @unittest.skip("Unimplemented")
-    def test_build_tests (self):
+    def test_clone_git (self):
         """
-        A function to test the build_tests functionality
+        A function to test the clone_git functionality
+        """
+        pass
+
+    @unittest.skip("Unimplemented")
+    def test_clone_hg (self):
+        """
+        A function to test the clone_hg functionality
+        """
+        pass
+
+    @unittest.skip("Unimplemented")
+    def test_clone_svn (self):
+        """
+        A function to test the clone_svn functionality
+        """
+        pass
+
+    @unittest.skip("Unimplemented")
+    def test_clone_script (self):
+        """
+        A function to test the clone_script functionality
+        """
+        pass
+
+    @unittest.skip("Unimplemented")
+    def test_clone_noop (self):
+        """
+        A function to test the clone_noop functionality
         """
         pass
 

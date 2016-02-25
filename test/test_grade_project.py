@@ -26,86 +26,53 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-This module contains the functions related to setup
+This module contains the functions related to grade project
 """
 import unittest
-from autograder.controller import setup
-
-class TestSetup(unittest.TestCase):
+class TestGradeProject(unittest.TestCase):
     """
-    Test cases for test_setup
+    Test cases for test_grade_project
     """
 
     @unittest.skip("Unimplemented")
-    def test_parse_settings (self):
+    def test_grade (self):
         """
-        A function to test the parse_settings functionality
-        """
-        pass
-
-    @unittest.skip("Unimplemented")
-    def test_setup_logging (self):
-        """
-        A function to test the setup_logging functionality
-        """
-        pass
-
-    def test_merge(self):
-        """
-        Test the merge function
-        """
-        default = {
-            'a': 1,
-            'b': 2,
-            'c': 3,
-            'd': {
-                'e': 4,
-                'f': "asdf",
-                'g': {
-                    "h": 5,
-                    "i": "j",
-                    },
-                'j': 5,
-                'k': "asdfasd"
-                }
-            }
-        testing = {
-            'a': 2,
-            'd': {
-                'e': 5,
-                'f': "adsf",
-                'k': "asdfasdfasdfadsf"
-                }
-            }
-        expected = {
-            'a': 2,
-            'b': 2,
-            'c': 3,
-            'd': {
-                'e': 5,
-                'f': "adsf",
-                'g': {
-                    "h": 5,
-                    "i": "j",
-                    },
-                'j': 5,
-                'k': "asdfasdfasdfadsf"
-                }
-            }
-        result = setup.merge(default, testing)
-        self.assertEqual(expected, result)
-
-    @unittest.skip("Unimplemented")
-    def test_prepare_enviroment (self):
-        """
-        A function to test the prepare_enviroment functionality
+        A function to test the grade functionality
         """
         pass
 
     @unittest.skip("Unimplemented")
-    def test_build_tests (self):
+    def test_grade_student (self):
         """
-        A function to test the build_tests functionality
+        A function to test the grade_student functionality
+        """
+        pass
+
+    @unittest.skip("Unimplemented")
+    def test_enumerate_reports (self):
+        """
+        A function to test the enumerate_reports functionality
+        """
+        pass
+
+    @unittest.skip("Unimplemented")
+    def test_enumerate_students (self):
+        """
+        A function to test the enumerate_students functionality
+        """
+        pass
+
+    @unittest.skip("Unimplemented")
+    def test_enumerate_tests (self):
+        """
+        A function to test the enumerate_tests functionality
+        """
+        pass
+
+    @unittest.skip("Unimplemented")
+    def test_run_test (self):
+        """
+        A function to test the run_test functionality
         """
         pass
 

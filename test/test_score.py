@@ -28,38 +28,112 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 This module contains the functions related to score
 """
+import json
 import unittest
+import unittest.mock as mock
+from autograder.test import score
+
 class TestScore(unittest.TestCase):
     """
     Test cases for test_score
     """
 
-    @unittest.skip("Unimplemented")
-    def test_score (self):
+    def setUp(self):
         """
-        A function to test the score functionality
+        Load testing resources
         """
-        pass
+        with open("resource/results.json") as infile:
+            self.sample_results = json.load(infile)
 
-    @unittest.skip("Unimplemented")
-    def test_score_point (self):
+
+    def test_score_point(self):
         """
         A function to test the score_point functionality
         """
-        pass
+        settings = {
+            "tests": [
+                {"score": {
+                    "min_points" : 5,
+                    "free_points" : 5,
+                    "points_each" : 5,
+                    "points_possible" : 15
+                    }
+                }
+            ]
+        }
+        output = self.sample_results['student1'][0]['output']
 
-    @unittest.skip("Unimplemented")
-    def test_score_passfail (self):
+        results = {"passed": 3}
+        expected = {"earned": 15, "possible": 15}
+        ret = score.score_point(settings, results, output, 0)
+        self.assertEqual(ret, expected)
+
+        results = {"passed": 2}
+        expected = {"earned": 15, "possible": 15}
+        ret = score.score_point(settings, results, output, 0)
+        self.assertEqual(ret, expected)
+
+        results = {"passed": 1}
+        expected = {"earned": 10, "possible": 15}
+        ret = score.score_point(settings, results, output, 0)
+        self.assertEqual(ret, expected)
+
+        results = {"passed": 0}
+        expected = {"earned": 5, "possible": 15}
+        ret = score.score_point(settings, results, output, 0)
+        self.assertEqual(ret, expected)
+
+
+    def test_score_passfail(self):
         """
         A function to test the score_passfail functionality
         """
-        pass
+        settings = {
+            "tests": [
+                {"score": {
+                    "min_points" : 5,
+                    "points_possible" : 16
+                    }
+                }
+            ]
+        }
+        output = self.sample_results['student1'][0]['output']
 
-    @unittest.skip("Unimplemented")
-    def test_score_script (self):
+        result = {"passed": 16}
+        expected = {"earned": 16, "possible": 16}
+        ret = score.score_passfail(settings, result, output, 0)
+        self.assertEqual(ret, expected)
+
+        result = {"passed": 15}
+        expected = {"earned": 5, "possible": 16}
+        ret = score.score_passfail(settings, result, output, 0)
+        self.assertEqual(ret, expected)
+
+
+
+    @mock.patch("autograder.test.score.run.run_cmd")
+    def test_score_script(self, run_patch):
         """
         A function to test the score_script functionality
         """
-        pass
+        settings = {
+            "tests": [
+                {"score": {
+                    "command" : "cmd"
+                    }
+                }
+            ]
+        }
+        output = self.sample_results['student1'][0]["output"]
+        result = self.sample_results['student1'][0]["results"]
+        expected_points = {"earned": 14, "possible": 16}
+        cmd_input = json.dumps({"run": output, "result": result})
+
+        run_patch.return_value = {"stdout": json.dumps(expected_points)}
+
+        ret = score.score_script(settings, result, output, 0)
+
+        run_patch.assert_called_with("cmd", cmd_input)
+        self.assertEqual(ret, expected_points)
 
 

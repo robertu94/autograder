@@ -54,6 +54,7 @@ class TestSetup(unittest.TestCase):
         """
         Test the merge function
         """
+
         default = {
             'a': 1,
             'b': 2,
@@ -67,15 +68,27 @@ class TestSetup(unittest.TestCase):
                     },
                 'j': 5,
                 'k': "asdfasd"
+                },
+            'e': {
+                'a': 1,
+                'b': 2,
+                'c': 3
                 }
             }
+
         testing = {
             'a': 2,
             'd': {
                 'e': 5,
                 'f': "adsf",
                 'k': "asdfasdfasdfadsf"
-                }
+                },
+            'e': [
+                {'a': 3},
+                {'b': 1},
+                {'a': 3, 'b':3}
+
+                ]
             }
         expected = {
             'a': 2,
@@ -90,7 +103,12 @@ class TestSetup(unittest.TestCase):
                     },
                 'j': 5,
                 'k': "asdfasdfasdfadsf"
-                }
+                },
+            'e': [
+                {'a': 3, 'b': 2, 'c': 3},
+                {'a': 1, 'b': 1, 'c': 3},
+                {'a': 3, 'b': 3, 'c': 3}
+                ]
             }
         result = setup.merge(default, testing)
         self.assertEqual(expected, result)

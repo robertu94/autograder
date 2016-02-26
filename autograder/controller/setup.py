@@ -4,15 +4,39 @@
 """
 This module is part of the Clemson ACM Auto Grader
 
+Copyright (c) 2016, Robert Underwood
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 This module is responsible for parsing settings and building tests if necessary.
 This module also configures logging
 
 
 settings:
     project:
-        method - method of enumerating class. It can be one of {"discover","file","manual"}
-        file - if method is "file" the list of list of student usernames
-        student - if method is "manual" the username of the student to test
+        method - method of enumerating class. It can be one of {"discover","json","csv","manual"}
+        file - if method is "csv" or "json" the list of list of student usernames
+        student - if method is "manual" a json dictionary corresponding to the student
         name - name of the project
         testdir - directory of files that should be copied into the build
             directory.  They will be copied into a '.autograder' directory at the
@@ -66,7 +90,8 @@ settings:
             free_points - the number of points that are essentially extra
             points_possible - maximum number of points possible for this test
     reports[] - a list of one or more reporting tasks
-        method - types of reporting to preform. It can be one of {"email","json","csv","script"}
+        method - types of reporting to preform. It can be one of {}
+        send_method - types of sending methods. It can be one of {"email","file"}
         source - where to send the report from output from for email
         destination - where to place the report.  For json and csv this should be a
             path, for email this should be an email address.
@@ -88,6 +113,7 @@ settings:
 """
 import json
 import logging
+
 LOGGER = logging.getLogger(__name__)
 DEFAULT_FILE = "/etc/autograder.conf"
 
@@ -158,7 +184,9 @@ def merge(defaults, dictionary):
     """
     for item in defaults:
         try:
-            if isinstance(defaults[item], dict):
+            if isinstance(dictionary[item], list):
+                dictionary[item] = [merge(defaults[item], x) for x in dictionary[item]]
+            elif isinstance(defaults[item], dict):
                 dictionary[item] = merge(defaults[item], dictionary[item])
             else:
                 dictionary[item] = dictionary.get(item, defaults[item])
@@ -166,19 +194,4 @@ def merge(defaults, dictionary):
             dictionary[item] = defaults[item]
     return dictionary
 
-def prepare_enviroment(settings):
-    """
-    Clean up the testing environment so tests are independent
-
-    dict settings - the return value from parse_args
-    """
-    pass
-
-def build_tests(settings):
-    """
-    Build the programs used to grade the projects
-
-    dict settings - the return value from parse_args
-    """
-    pass
 

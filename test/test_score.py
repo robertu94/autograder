@@ -111,7 +111,7 @@ class TestScore(unittest.TestCase):
 
 
 
-    @mock.patch("autograder.test.score.run.run_cmd")
+    @mock.patch("autograder.test.parse.run.run_cmd")
     def test_score_script(self, run_patch):
         """
         A function to test the score_script functionality

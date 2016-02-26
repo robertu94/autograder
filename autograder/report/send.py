@@ -11,36 +11,49 @@ import smtplib
 import email
 import datetime
 
-def send_email(settings, report_id, report_text):
+def send(settings, report_id, report_text, student=None):
+    """
+    Main method that sends off the report
+    """
+    SENDERS = {
+        "email": send_email,
+        "file": send_file
+    }
+
+    send_method = settings["reports"][report_id]["send_method"]
+    SENDERS[send_method](settings, report_id, report_text, student)
+
+def send_email(settings, report_id, report_text, student):
     """
     Send the text over the email
     """
     message = email.message_from_string(report_text)
-    message['To'] = transform_format_codes(settings['reports'][report_id]['destination'])
-    message['From'] = transform_format_codes(settings['reports'][report_id]['source'])
-    message['Subject'] = transform_format_codes(settings['reports'][report_id]['subject'])
+    message['To'] = transform_format_codes(settings['reports'][report_id]['destination'], student)
+    message['From'] = transform_format_codes(settings['reports'][report_id]['source'], student)
+    message['Subject'] = transform_format_codes(settings['reports'][report_id]['subject'], student)
     #TODO support greater variety of smtp servers types as well as smtps
     with smtplib.SMTP('localhost') as email_server:
         email_server.send_message(message)
 
-def send_to_file(settings, report_id, report_text):
+def send_file(settings, report_id, report_text, student):
     """
     Send the text to a file
     """
-    destination = transform_format_codes(settings['reports'][report_id]['destination'])
+    destination = transform_format_codes(settings['reports'][report_id]['destination'], student)
     with open(destination, 'w') as outfile:
         outfile.write(report_text)
 
 
-def transform_format_codes(dest):
+def transform_format_codes(dest, student):
     """
     transform the destination address to use format codes
     """
-    user_username = "user"
-    user_email = "email"
+    if student is None and ("%u" in dest or "%e" in dest):
+        raise Exception
+    else:
+        dest = dest.replace('%u', student['username'])
+        dest = dest.replace('%e', student['email'])
     date = str(datetime.date.today())
-    dest = dest.replace('%u', user_username)
-    dest = dest.replace('%e', user_email)
     dest = dest.replace('%d', date)
     return dest
 

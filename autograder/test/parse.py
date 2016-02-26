@@ -9,7 +9,7 @@ This module is responsible for parsing results from student submissions
 import json
 import logging
 
-import run
+from autograder.test import run
 LOGGER = logging.getLogger(__name__)
 
 def parse(settings, output, test):

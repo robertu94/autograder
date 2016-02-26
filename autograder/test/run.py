@@ -7,7 +7,6 @@ This module is part of the Clemson ACM Auto Grader
 This module is responsible for running tests
 """
 import logging
-import os
 import signal
 import subprocess
 import time
@@ -29,7 +28,7 @@ def run(settings, student, test):
         'script': run_script,
         'docker': run_docker
         }
-    runners[settings['tests'][test]['run']['method']](settings, student, test)
+    return runners[settings['tests'][test]['run']['method']](settings, student, test)
 
 def run_script(settings, student, test):
     """

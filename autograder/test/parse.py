@@ -61,6 +61,6 @@ def parse_tap(settings, output, test):
         "passed": passed,
         "failed": failed,
         "skipped": skipped,
-        "error": error,
+        "errors": error,
         "total": total
         }

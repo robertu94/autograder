@@ -166,14 +166,14 @@ def setup_logging(settings):
         },
         'loggers': {
             'autograder': {
-                'handlers': ['console', 'file'],
+                'handlers': ['file'],
                 'propagate' : True,
                 'level': 'DEBUG'
             },
             'autograder.grade_project': {
                 'handlers': ['console', 'file'],
                 'propagate' : False,
-                'level': 'DEBUG'
+                'level': 'WARNING'
             },
         },
     }

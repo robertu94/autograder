@@ -10,18 +10,8 @@ formats.
 import functools
 import logging
 import operator
+import json
 LOGGER = logging.getLogger(__name__)
-
-FORMATTERS_STUDENT = {
-    "json": format_json_student,
-    "csv": format_csv_student,
-    "text": format_text_student
-}
-FORMATTERS_CLASS = {
-    "json": format_json_class,
-    "csv": format_csv_class,
-    "text": format_text_class
-}
 SUBHEADERS = {
     "output": ["stderr", "stdout", "return", "error", "time"],
     "points": ["earned", "possible"],
@@ -41,13 +31,19 @@ def format_json_class(report, results):
     """
     Formats results in json for a class
     """
-    return format_machine_test_case(report['detail'], format_machine_class_summary(report['detail'], results))
+    formatted_results = {}
+    for student in results:
+        formatted_results[student] = format_machine_student_summary(report['detail'], results[student])
+    if report['summarize']:
+        formatted_results["summary"] = format_machine_class_summary(report['detail'], results),
+    return json.dumps(formatted_results, indent=2, sort_keys=True)
 
 def format_csv_class(report, results):
     """
     Formats results in csv for a class
     """
     return format_machine_test_case_flat(report['detail'], format_machine_class_summary(report['detail'], results))
+
 def format_text_class(report, results):
     """
     Formats results in text for a class
@@ -58,13 +54,20 @@ def format_json_student(report, results, student):
     """
     Formats results in json for a student
     """
-    return format_machine_test_case(report['detail'], format_machine_student_summary(report['detail'], results[student['username']]))
+    i = 1
+    formatted_results = {}
+    for testcase in results[student['username']]:
+        formatted_results["test {}".format(i)] = format_machine_test_case(report['detail'], testcase)
+        i += 1
+    if report['summarize']:
+        formatted_results["summary"] = format_machine_student_summary(report['detail'], results[student['username']])
+    return json.dumps(formatted_results, indent=2, sort_keys=True)
 
 def format_csv_student(report, results, student):
     """
     Formats results in csv for a student
     """
-    return format_machine_test_case_flat(report['detail'], format_machine_student_summary(report['detail'], results[student['username']]))
+    return format_machine_student_summary(report['detail'], results[student['username']])
 
 
 def format_text_student(report, results, student):
@@ -198,3 +201,13 @@ def format_test_case_points(results):
         "".format(earned=score['earned'], possible=score['possible'])
     )
 
+FORMATTERS_STUDENT = {
+    "json": format_json_student,
+    "csv": format_csv_student,
+    "text": format_text_student
+}
+FORMATTERS_CLASS = {
+    "json": format_json_class,
+    "csv": format_csv_class,
+    "text": format_text_class
+}

@@ -59,7 +59,7 @@ def build_make(settings, student):
     LOGGER.info('Beginning a Make build for student %s', student['username'])
     cmd = 'make'
     timeout = int(settings['build']['timeout']) or 5
-    subprocess.check_call(cmd, stdout=None, stderr=None,
+    subprocess.check_call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
                           timeout=timeout, cwd=student['directory'])
 
     LOGGER.info('Completed a Make build for student %s', student['username'])

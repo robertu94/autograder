@@ -50,7 +50,7 @@ def transform_format_codes(dest, student):
     """
     if student is None and ("%u" in dest or "%e" in dest):
         raise Exception
-    else:
+    elif student is not None:
         dest = dest.replace('%u', student['username'])
         dest = dest.replace('%e', student['email'])
     date = str(datetime.date.today())

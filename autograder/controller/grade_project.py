@@ -45,12 +45,13 @@ def grade(settings):
     Grade all of the projects
     """
     enviroment.prepare_enviroment(settings)
+    students = project.enumerate_students(settings)
     results = {}
-    for student in project.enumerate_students(settings):
+    for student in students:
         result = grade_student(settings, student)
         results[student['username']] = result
     for report in project.enumerate_reports(settings):
-        reports.report(report, results)
+        reports.reports(report, results, students)
 
 def grade_student(settings, student):
     """
@@ -78,6 +79,6 @@ def run_test(settings, student, test):
     points = score.score(result, output, test)
     return {
         "output": output,
-        "result": result,
+        "results": result,
         "points": points
     }

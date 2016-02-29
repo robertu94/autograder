@@ -1,13 +1,13 @@
 {
 	"project": {
 		"file": "students.json",
-		"method": "file",
+		"method": "json",
 		"name": "fizzbuzz",
 		"testdir": "project"
 	},
 	"tests": [
 		{
-			"run": { "command": ".autograder/test.bats" },
+			"run": { "command": ".autograder/tests.bats" },
 			"score": {
 				"method": "points",
 				"points_possible": 40,

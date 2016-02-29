@@ -90,7 +90,7 @@ settings:
             free_points - the number of points that are essentially extra
             points_possible - maximum number of points possible for this test
     reports[] - a list of one or more reporting tasks
-        method - types of reporting to preform. It can be one of {}
+        formatter_method - types of reporting to preform. It can be one of {}
         send_method - types of sending methods. It can be one of {"email","file"}
         source - where to send the report from output from for email
         destination - where to place the report.  For json and csv this should be a
@@ -105,7 +105,7 @@ settings:
         command - when the reporting method is "script" the command use to report the output
         detail - amount of detail to report. It is a list that can
             contain {"output","result","score"}
-        summarize - include the summary
+        summarize - class include the summary [if not separate] or student summary[if separate]
     logging
         logfile - where output should be logged to disk
         file_verbosity - what level of output to show in the logfile

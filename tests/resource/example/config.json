@@ -28,10 +28,13 @@
 			"destination": "output.json",
 			"detail": [
 				"output",
-				"result",
-				"score"
+				"results",
+				"points"
 			],
-			"method": "json"
+			"send_method": "file",
+			"formatter_method": "json",
+			"seperate": true
+
 		}
 	]
 }

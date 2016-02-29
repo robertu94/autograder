@@ -12,11 +12,66 @@ import logging
 import operator
 LOGGER = logging.getLogger(__name__)
 
+FORMATTERS_STUDENT = {
+    "json": format_json_student,
+    "csv": format_csv_student,
+    "text": format_text_student
+}
+FORMATTERS_CLASS = {
+    "json": format_json_class,
+    "csv": format_csv_class,
+    "text": format_text_class
+}
 SUBHEADERS = {
     "output": ["stderr", "stdout", "return", "error", "time"],
     "points": ["earned", "possible"],
     "results":["errors", "passed", "failed", "skipped", "total"]
 }
+
+def formatters(report, results, student=None):
+    """
+    Main method for the formatter module
+    """
+    if report['seperate']:
+        return FORMATTERS_STUDENT[report['formatter_method']](report, results, student)
+    else:
+        return FORMATTERS_CLASS[report['formatter_method']](report, results)
+
+def format_json_class(report, results):
+    """
+    Formats results in json for a class
+    """
+    return format_machine_test_case(report['detail'], format_machine_class_summary(report['detail'], results))
+
+def format_csv_class(report, results):
+    """
+    Formats results in csv for a class
+    """
+    return format_machine_test_case_flat(report['detail'], format_machine_class_summary(report['detail'], results))
+def format_text_class(report, results):
+    """
+    Formats results in text for a class
+    """
+    return format_class_summary(report['detail'], results)
+
+def format_json_student(report, results, student):
+    """
+    Formats results in json for a student
+    """
+    return format_machine_test_case(report['detail'], format_machine_student_summary(report['detail'], results[student['username']]))
+
+def format_csv_student(report, results, student):
+    """
+    Formats results in csv for a student
+    """
+    return format_machine_test_case_flat(report['detail'], format_machine_student_summary(report['detail'], results[student['username']]))
+
+
+def format_text_student(report, results, student):
+    """
+    Formats results in text for a student
+    """
+    return format_student_summary(report['detail'], results[student['username']])
 
 def format_machine_class_summary(detail, results):
     """

@@ -11,7 +11,7 @@ import smtplib
 import email
 import datetime
 
-def send(settings, report_id, report_text, student=None):
+def send(report, report_text, student=None):
     """
     Main method that sends off the report
     """
@@ -20,26 +20,26 @@ def send(settings, report_id, report_text, student=None):
         "file": send_file
     }
 
-    send_method = settings["reports"][report_id]["send_method"]
-    SENDERS[send_method](settings, report_id, report_text, student)
+    send_method = report["send_method"]
+    SENDERS[send_method](report, report_text, student)
 
-def send_email(settings, report_id, report_text, student):
+def send_email(report, report_text, student):
     """
     Send the text over the email
     """
     message = email.message_from_string(report_text)
-    message['To'] = transform_format_codes(settings['reports'][report_id]['destination'], student)
-    message['From'] = transform_format_codes(settings['reports'][report_id]['source'], student)
-    message['Subject'] = transform_format_codes(settings['reports'][report_id]['subject'], student)
+    message['To'] = transform_format_codes(report['destination'], student)
+    message['From'] = transform_format_codes(report['source'], student)
+    message['Subject'] = transform_format_codes(report['subject'], student)
     #TODO support greater variety of smtp servers types as well as smtps
     with smtplib.SMTP('localhost') as email_server:
         email_server.send_message(message)
 
-def send_file(settings, report_id, report_text, student):
+def send_file(report, report_text, student):
     """
     Send the text to a file
     """
-    destination = transform_format_codes(settings['reports'][report_id]['destination'], student)
+    destination = transform_format_codes(report['destination'], student)
     with open(destination, 'w') as outfile:
         outfile.write(report_text)
 

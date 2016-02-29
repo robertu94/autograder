@@ -23,7 +23,13 @@ setup(name="autograder",
       keywords="autograder education docker",
       license="bsd",
       long_description=readme(),
-      packages=['autograder', 'autograder.controller', 'autograder.report', 'autograder.test', 'autograder.source'],
+      packages=[
+          'autograder',
+          'autograder.controller',
+          'autograder.report',
+          'autograder.test',
+          'autograder.source'
+          ],
       url="https://www.cs.clemson.edu/acm",
       version="0.0.1",
       zip_safe=False

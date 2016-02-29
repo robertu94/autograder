@@ -50,7 +50,7 @@ def grade(settings):
         result = grade_student(settings, student)
         results[student['username']] = result
     for report in project.enumerate_reports(settings):
-        reports.report(settings, report, results)
+        reports.report(report, results)
 
 def grade_student(settings, student):
     """

@@ -87,7 +87,7 @@ def enumerate_students_csv(settings):
             students.append(student)
     return students
 
-def enererate_students_manual(settings):
+def enumerate_students_manual(settings):
     """
     returns a list of a single student
     """

@@ -113,6 +113,7 @@ settings:
 """
 import json
 import logging
+import logging.config
 
 LOGGER = logging.getLogger(__name__)
 DEFAULT_FILE = "/etc/autograder.conf"
@@ -128,6 +129,8 @@ def parse_settings(options):
     with open(DEFAULT_FILE) as default_config:
         defaults = json.load(default_config)
     settings = merge(defaults, settings)
+
+    LOGGER.debug(json.dumps(settings, sort_keys=True, indent=2))
 
     return settings
 

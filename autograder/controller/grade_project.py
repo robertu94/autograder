@@ -37,14 +37,14 @@ import logging
 from autograder.source import build, clean, clone, update
 from autograder.report import reports
 from autograder.test import run, score, parse
-from autograder.controller import enviroment
+from autograder.controller import enviroment, project
 LOGGER = logging.getLogger(__name__)
 
 def grade(settings):
     """
     Grade all of the projects
     """
-    enviroment.prepare_enviroment()
+    enviroment.prepare_enviroment(settings)
     results = {}
     for student in project.enumerate_students(settings):
         result = grade_student(settings, student)
@@ -61,7 +61,7 @@ def grade_student(settings, student):
     clean.clean(settings, student)
     update.update(settings, student)
     results = []
-    for test in enumerate_tests(settings):
+    for test in project.enumerate_tests(settings):
         result = run_test(settings, student, test)
         results.insert(result)
     return results

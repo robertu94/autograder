@@ -1,0 +1,1 @@
+{"stderr": null, "stdout": "1..8\nok 1 testcase 1\nok 2 testcase 2\nok 3 testcase 3\nok 4 testcase 4\nok 5 testcase 5\nok 6 testcase 6\nok 7 testcase invalid\nok 8 testcase no args\n", "error": false, "time": 1.2, "return": 0}

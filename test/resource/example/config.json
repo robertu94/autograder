@@ -1,0 +1,74 @@
+{
+  "project": {
+    "file": "students.txt",
+    "method": "file",
+    "name": "fizzbuzz",
+    "testdir": "project"
+  },
+  "prepare": {
+    "method": "hg"
+  },
+  "update": {
+    "method": "hg"
+  },
+  "build": {
+    "method": "make"
+  },
+  "tests": [
+    {
+      "parse": {
+        "input": "json",
+        "method": "tap",
+        "output": "json"
+      },
+      "run": {
+        "command": ".autograder/test.bats",
+        "input": "",
+        "method": "script",
+        "stderr": null,
+        "timeout": 5
+      },
+      "score": {
+        "method": "points",
+		"points_possible": 40,
+		"points_each": 5
+      }
+    },
+    {
+      "parse": {
+        "input": "json",
+        "method": "tap",
+        "output": "json"
+      },
+      "run": {
+        "command": ".autograder/files.bats",
+        "input": "",
+        "method": "script",
+        "stderr": null,
+        "timeout": 5
+      },
+      "score": {
+        "method": "points",
+		"points_possible": 5,
+		"points_each": 2,
+		"free_points": 1
+      }
+    }
+  ],
+  "reports": [
+    {
+      "destination": "output.json",
+      "detail": [
+        "output",
+        "result",
+        "score"
+      ],
+      "method": "json"
+    }
+  ],
+  "logging": {
+    "console_verbosity": "DEBUG",
+    "file_verbosity": "DEBUG",
+    "logfile": "autograder.log"
+  }
+}

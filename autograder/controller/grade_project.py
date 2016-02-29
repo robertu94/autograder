@@ -48,7 +48,7 @@ def grade(settings):
     results = {}
     for student in project.enumerate_students(settings):
         result = grade_student(settings, student)
-        results[student] = result
+        results[student['username']] = result
     for report in project.enumerate_reports(settings):
         reports.report(settings, report, results)
 
@@ -63,7 +63,7 @@ def grade_student(settings, student):
     results = []
     for test in project.enumerate_tests(settings):
         result = run_test(settings, student, test)
-        results.insert(result)
+        results.append(result)
     return results
 
 
@@ -74,8 +74,8 @@ def run_test(settings, student, test):
     clean.clean(settings, student)
     build.build(settings, student)
     output = run.run(settings, student, test)
-    result = parse.parse(settings, output, test)
-    points = score.score(settings, result, output, test)
+    result = parse.parse(output, test)
+    points = score.score(result, output, test)
     return {
         "output": output,
         "result": result,

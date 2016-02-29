@@ -130,7 +130,6 @@ def parse_settings(options):
         defaults = json.load(default_config)
     settings = merge(defaults, settings)
 
-    LOGGER.debug(json.dumps(settings, sort_keys=True, indent=2))
 
     return settings
 
@@ -167,9 +166,9 @@ def setup_logging(settings):
         },
         'loggers': {
             'autograder': {
-                'handlers': ['console'],
+                'handlers': ['console', 'file'],
                 'propagate' : True,
-                'level': 'WARNING'
+                'level': 'DEBUG'
             },
             'autograder.grade_project': {
                 'handlers': ['console', 'file'],
@@ -180,6 +179,7 @@ def setup_logging(settings):
     }
 
     logging.config.dictConfig(logconfig)
+    LOGGER.debug(json.dumps(settings, sort_keys=True, indent=2))
 
 def merge(defaults, dictionary):
     """

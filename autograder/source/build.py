@@ -12,16 +12,33 @@ import shutil
 import os
 LOGGER = logging.getLogger(__name__)
 
-def build(settings, student):
+def build(settings, student, building_test_cases=False):
     """
     Build the files that were submitted
     """
     builder = {
         'script': build_script,
         'make': build_make,
-        'docker': build_docker
+        'docker': build_docker,
+        'noop': build_noop
         }
-    builder[settings['build']['method']](settings, student)
+    if not building_test_cases:
+        build_prepare(settings, student)
+    try:
+        builder[settings['build']['method']](settings, student)
+    except:
+        LOGGER.warning("build for student %s failed" % student['username'])
+
+def build_prepare(settings, student):
+    """
+    Copies the tests intro the autograder directory
+    """
+    auto_grader_directory = os.path.join(student['directory'], '.autograder')
+    try:
+        shutil.rmtree(auto_grader_directory)
+    except FileNotFoundError:
+        pass #autograder files may not exist yet
+    shutil.copytree(settings['project']['testdir'], auto_grader_directory)
 
 def build_script(settings, student):
     """
@@ -42,7 +59,7 @@ def build_make(settings, student):
     LOGGER.info('Beginning a Make build for student %s', student['username'])
     cmd = 'make'
     timeout = int(settings['build']['timeout']) or 5
-    subprocess.check_call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+    subprocess.check_call(cmd, stdout=None, stderr=None,
                           timeout=timeout, cwd=student['directory'])
 
     LOGGER.info('Completed a Make build for student %s', student['username'])
@@ -55,16 +72,18 @@ def build_docker(settings, student):
 
     cmd = 'docker build -t {student}_{project}'
     cmd = cmd.format(studnet=student['username'], project=settings['project']['name'])
-    auto_grader_directory = os.path.join(student['directory'], '.autograder')
     timeout = int(settings['build']['timeout']) or None
 
     #prepare build directory
     shutil.copyfile(settings['build']['dockerfile'], student['directory'])
-    shutil.rmtree(auto_grader_directory)
-    shutil.copytree(settings['project']['testdir'], auto_grader_directory)
 
 
     subprocess.check_call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
                           timeout=timeout, cwd=student['directory'])
     LOGGER.info('Completed a Docker build for student %s', student['username'])
 
+def build_noop(settings, student):
+    """
+    Build action that is a noop
+    """
+    pass

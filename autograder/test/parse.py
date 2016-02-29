@@ -16,6 +16,8 @@ def parse(output, test):
     """
     Method responsible for parsing the output of the test
     """
+    LOGGER.debug(test['parse'])
+    LOGGER.debug(json.dumps(output, indent=2, sort_keys=True))
 
     parser = {
         'tap': parse_tap,

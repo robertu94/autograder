@@ -24,6 +24,7 @@ def run(settings, student, test):
     """
     Runs a script
     """
+    LOGGER.debug(test['run'])
     runners = {
         'script': run_script,
         'docker': run_docker

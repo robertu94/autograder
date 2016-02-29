@@ -70,7 +70,7 @@ def build_enviroment(settings):
         "username": settings['project']['testdir']
     }
     setting = settings['project']['enviroment']
-    return build.build(setting, project)
+    return build.build(setting, project, building_test_cases=True)
 
 def update_enviroment(settings):
     """

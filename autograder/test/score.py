@@ -16,6 +16,7 @@ def score(result, output, test):
     """
     Calculate a final score
     """
+    LOGGER.debug(json.dumps(result, indent=2, sort_keys=True))
     scorers = {
         'passfail': score_passfail,
         'points': score_point,

@@ -24,7 +24,7 @@ def update(settings, student):
         "svn": update_svn,
         "script": update_script
     }
-    return updaters[settings.update.method](settings, student)
+    return updaters[settings["update"]["method"]](settings, student)
 
 
 def update_hg(settings, student):

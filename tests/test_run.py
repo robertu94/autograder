@@ -77,19 +77,15 @@ class RunTest(unittest.TestCase):
         """
         Test running a script
         """
-        settings = {
-            "tests": [
-                {
-                    'run': {
-                        "command": "./test_cmd.sh pass",
-                        "input": "timeout",
-                        "timeout": 1.0,
-                        "stderr": "yes"
-                    }
-                }
-            ]
+        settings = None #ignored
+        test = {
+            'run': {
+                "command": "./test_cmd.sh pass",
+                "input": "timeout",
+                "timeout": 1.0,
+                "stderr": "yes"
+            }
         }
-        test = 0
         student = {
             "directory": "scripts",
         }
@@ -110,19 +106,15 @@ class RunTest(unittest.TestCase):
         """
         Test running a script
         """
-        settings = {
-            "tests": [
-                {
-                    'run': {
-                        "command": "./test_cmd.sh fail",
-                        "input": "timeout",
-                        "timeout": 1.0,
-                        "stderr": "yes"
-                    }
-                }
-            ]
+        test = {
+            'run': {
+                "command": "./test_cmd.sh fail",
+                "input": "timeout",
+                "timeout": 1.0,
+                "stderr": "yes"
+            }
         }
-        test = 0
+        settings = None #ignored
         student = {
             "directory": "scripts",
         }
@@ -145,19 +137,15 @@ class RunTest(unittest.TestCase):
         Test running a script that times out
         """
         #Configure input
-        settings = {
-            "tests": [
-                {
-                    'run': {
-                        "command": "./test_cmd.sh timeout",
-                        "input": "timeout",
-                        "timeout": 1.0,
-                        "stderr": "yes"
-                    }
-                }
-            ]
+        settings = None #ignored
+        test = {
+            'run': {
+                "command": "./test_cmd.sh timeout",
+                "input": "timeout",
+                "timeout": 1.0,
+                "stderr": "yes"
+            }
         }
-        test = 0
         student = {
             "directory": "scripts",
         }

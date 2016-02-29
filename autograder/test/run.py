@@ -28,17 +28,17 @@ def run(settings, student, test):
         'script': run_script,
         'docker': run_docker
         }
-    return runners[settings['tests'][test]['run']['method']](settings, student, test)
+    return runners[test['run']['method']](settings, student, test)
 
 def run_script(settings, student, test):
     """
     Runs a script to execute a test
     """
-    cmd = settings['tests'][test]['run']['command']
-    cmd_input = settings['tests'][test]['run']['input']
+    cmd = test['run']['command']
+    cmd_input = test['run']['input']
     directory = student['directory']
-    timeout = settings['tests'][test]['run']['timeout']
-    stderr = STDERR[settings['tests'][test]['run']['stderr']]
+    timeout = test['run']['timeout']
+    stderr = STDERR[test['run']['stderr']]
 
     return run_cmd(cmd, cmd_input, directory, timeout, stderr)
 
@@ -59,12 +59,12 @@ def run_docker(settings, student, test):
     """
     student = student['username']
     project = settings['project']['name']
-    command = settings['tests'][test]['run']['command']
+    command = test['run']['command']
     container = "{student}_{project}".format(student=student, project=project)
-    cmd_input = settings['tests'][test]['run']['input']
-    timeout = settings['tests'][test]['run']['timeout']
+    cmd_input = test['run']['input']
+    timeout = test['run']['timeout']
     #TODO eventually accept a dictionary instead of a sequence of flags
-    constraints = settings['tests'][test]['run']['constaints']
+    constraints = test['run']['constaints']
     cmd = "docker run --rm {constraints} {containter} {command}"
     cmd = cmd.format(command=command, container=container, constraints=constraints)
 

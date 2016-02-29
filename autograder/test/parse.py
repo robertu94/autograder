@@ -12,7 +12,7 @@ import logging
 from autograder.test import run
 LOGGER = logging.getLogger(__name__)
 
-def parse(settings, output, test):
+def parse(output, test):
     """
     Method responsible for parsing the output of the test
     """
@@ -21,21 +21,21 @@ def parse(settings, output, test):
         'tap': parse_tap,
         'script': parse_script
         }
-    return parser[settings['tests'][test]['parse']['method']](settings, output, test)
+    return parser[test['parse']['method']](output, test)
 
-def parse_script(settings, output, test):
+def parse_script(output, test):
     """
     parse output with a script
     """
-    cmd = settings['tests'][test]['parse']['command']
+    cmd = test['parse']['command']
     cmd_input = output['stdout']
-    timeout = settings['tests'][test]['parse']['timeout']
+    timeout = test['parse']['timeout']
 
     ret = run.run_cmd(cmd, cmd_input, timeout=timeout)
 
     return json.loads(ret['stdout'])
 
-def parse_tap(settings, output, test):
+def parse_tap(output, test):
     """
     parse output from bats tap compliant mode
     """

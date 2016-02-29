@@ -50,37 +50,33 @@ class TestScore(unittest.TestCase):
         """
         A function to test the score_point functionality
         """
-        settings = {
-            "tests": [
-                {"score": {
-                    "min_points" : 5,
-                    "free_points" : 5,
-                    "points_each" : 5,
-                    "points_possible" : 15
-                    }
-                }
-            ]
+        test = {"score": {
+            "min_points" : 5,
+            "free_points" : 5,
+            "points_each" : 5,
+            "points_possible" : 15
+            }
         }
         output = self.sample_results['student1'][0]['output']
 
         results = {"passed": 3}
         expected = {"earned": 15, "possible": 15}
-        ret = score.score_point(settings, results, output, 0)
+        ret = score.score_point(results, output, test)
         self.assertEqual(ret, expected)
 
         results = {"passed": 2}
         expected = {"earned": 15, "possible": 15}
-        ret = score.score_point(settings, results, output, 0)
+        ret = score.score_point(results, output, test)
         self.assertEqual(ret, expected)
 
         results = {"passed": 1}
         expected = {"earned": 10, "possible": 15}
-        ret = score.score_point(settings, results, output, 0)
+        ret = score.score_point(results, output, test)
         self.assertEqual(ret, expected)
 
         results = {"passed": 0}
         expected = {"earned": 5, "possible": 15}
-        ret = score.score_point(settings, results, output, 0)
+        ret = score.score_point(results, output, test)
         self.assertEqual(ret, expected)
 
 
@@ -88,25 +84,21 @@ class TestScore(unittest.TestCase):
         """
         A function to test the score_passfail functionality
         """
-        settings = {
-            "tests": [
-                {"score": {
-                    "min_points" : 5,
-                    "points_possible" : 16
-                    }
-                }
-            ]
-        }
+        test = {"score": {
+            "min_points" : 5,
+            "points_possible" : 16
+            }
+               }
         output = self.sample_results['student1'][0]['output']
 
         result = {"passed": 16}
         expected = {"earned": 16, "possible": 16}
-        ret = score.score_passfail(settings, result, output, 0)
+        ret = score.score_passfail(result, output, test)
         self.assertEqual(ret, expected)
 
         result = {"passed": 15}
         expected = {"earned": 5, "possible": 16}
-        ret = score.score_passfail(settings, result, output, 0)
+        ret = score.score_passfail(result, output, test)
         self.assertEqual(ret, expected)
 
 
@@ -116,14 +108,7 @@ class TestScore(unittest.TestCase):
         """
         A function to test the score_script functionality
         """
-        settings = {
-            "tests": [
-                {"score": {
-                    "command" : "cmd"
-                    }
-                }
-            ]
-        }
+        test = {"score":{"command" : "cmd"}}
         output = self.sample_results['student1'][0]["output"]
         result = self.sample_results['student1'][0]["results"]
         expected_points = {"earned": 14, "possible": 16}
@@ -131,7 +116,7 @@ class TestScore(unittest.TestCase):
 
         run_patch.return_value = {"stdout": json.dumps(expected_points)}
 
-        ret = score.score_script(settings, result, output, 0)
+        ret = score.score_script(result, output, test)
 
         run_patch.assert_called_with("cmd", cmd_input)
         self.assertEqual(ret, expected_points)

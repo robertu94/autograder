@@ -60,15 +60,11 @@ class TestParse(unittest.TestCase):
         """
         A function to test the parse_script functionality
         """
-        settings = {
-            "tests": [
-                {"parse": {
-                    "command" : "cmd",
-                    "timeout" : 5
-                    }
-                }
-            ]
-        }
+        test = {"parse": {
+            "command" : "cmd",
+            "timeout" : 5
+            }
+               }
         output = self.sample_results['student1'][0]["output"]
 
         expected = {
@@ -82,7 +78,7 @@ class TestParse(unittest.TestCase):
 
         run_patch.return_value = {"stdout": json.dumps(expected)}
 
-        ret = parse.parse_script(settings, output, 0)
+        ret = parse.parse_script(output, test)
 
         run_patch.assert_called_with("cmd", cmd_input, timeout=5)
         self.assertEqual(ret, expected)
@@ -91,12 +87,11 @@ class TestParse(unittest.TestCase):
         """
         A function to test the parse_tap functionality
         """
-        settings = None #ignored
-        test = 0 #ignored
+        test = None #ignored
 
         for i in self.tap:
             with self.subTest(i=i):
-                ret = parse.parse_tap(settings, i[0], test)
+                ret = parse.parse_tap(i[0], test)
                 self.assertEqual(ret, i[1])
 
 

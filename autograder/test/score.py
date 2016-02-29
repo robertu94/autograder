@@ -12,7 +12,7 @@ import logging
 from autograder.test import run
 LOGGER = logging.getLogger(__name__)
 
-def score(settings, result, output, test):
+def score(result, output, test):
     """
     Calculate a final score
     """
@@ -21,39 +21,39 @@ def score(settings, result, output, test):
         'points': score_point,
         'script': score_script
         }
-    return scorers[settings['tests'][test]['score']['method']](settings, result, output, test)
+    return scorers[test['score']['method']](result, output, test)
 
-def score_point(settings, result, output, test):
+def score_point(result, output, test):
     """
     Calculate a pass fail score
     """
     passed = int(result['passed'])
-    extra = int(settings['tests'][test]['score']['free_points'])
-    min_score = int(settings['tests'][test]['score']['min_points'])
-    points_possible = int(settings['tests'][test]['score']['points_possible'])
-    points_each = int(settings['tests'][test]['score']['points_each'])
+    extra = int(test['score']['free_points'])
+    min_score = int(test['score']['min_points'])
+    points_possible = int(test['score']['points_possible'])
+    points_each = int(test['score']['points_each'])
     earned_score = min(max(min_score, points_each * passed + extra), points_possible)
 
     return {'earned': int(earned_score), 'possible':  int(points_possible)}
 
-def score_passfail(settings, result, output, test):
+def score_passfail(result, output, test):
     """
     Calculate a pass fail score
     """
     passed = int(result['passed'])
-    min_score = int(settings['tests'][test]['score']['min_points'])
-    points_possible = int(settings['tests'][test]['score']['points_possible'])
+    min_score = int(test['score']['min_points'])
+    points_possible = int(test['score']['points_possible'])
     if passed == points_possible:
         return {'earned': int(points_possible), 'possible':  int(points_possible)}
     else:
         return {'earned': int(min_score), 'possible':  int(points_possible)}
 
 
-def score_script(settings, result, output, test):
+def score_script(result, output, test):
     """
     Calculate a score using a script
     """
-    cmd = settings['tests'][test]['score']['command']
+    cmd = test['score']['command']
     obj = {
         "run": output,
         "result": result

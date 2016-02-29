@@ -18,12 +18,12 @@ setup(name="autograder",
       ],
       description="A automatic testing and grading framework in python",
       entry_points={
-          'autograder': ['autograder=autograder.controller.autograder:main']
+          'console_scripts': ['autograder=autograder.controller.autograder:main']
       },
       keywords="autograder education docker",
       license="bsd",
       long_description=readme(),
-      packages=['autograder'],
+      packages=['autograder', 'autograder.controller', 'autograder.report', 'autograder.test', 'autograder.source'],
       url="https://www.cs.clemson.edu/acm",
       version="0.0.1",
       zip_safe=False

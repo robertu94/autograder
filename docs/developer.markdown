@@ -119,7 +119,7 @@ JSON formatted dictionary with the following keys should be outputted to stdout:
 passed - integer representing the number of tests passed
 failed - integer representing the number of tests failed
 skipped - integer representing the number of tests skipped
-error - integer representing the number of errors that occured
+error - integer representing the number of errors that occurred
 total - integer representing the sum of the previous 4 keys
 
 ### Errors
@@ -127,7 +127,7 @@ total - integer representing the sum of the previous 4 keys
 If there is a problem the script should return non-zero.
 
 
-Grade
+Score
 --------------------------------------------------------------------------------
 
 ### Behavior

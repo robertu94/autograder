@@ -30,6 +30,66 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 This module provides utilities that allow for enumerating through student
 submissions.
+
+results structure:
+{
+	"student1": [
+		{
+			"output": {
+				"stdout": "this is the stdout1\n",
+				"stderr": "this is the stderr1\n",
+				"return": 0,
+				"time": 1.2,
+				"error": false
+			},
+			"results": {
+				"passed": 7,
+				"failed": 1,
+				"skipped": 0,
+				"errors": 0,
+				"total": 8
+			},
+			"points": {
+				"earned": 7,
+				"possible": 8
+			}
+		},
+		{
+			"output": {...},
+			"results": {...},
+			"points": {...}
+		}
+	],
+        "student2": [...]
+}
+
+stdout - ASCII encoded string of the stdout of the process
+stderr - ASCII encoded string of the stderr of the process
+return - integer return code from the process
+time - floating point value corresponding to the runtime
+error - true if the process was killed/errored out
+passed - integer number of test cases passed
+failed - integer number of test cases failed
+skipped - integer number of test cases skipped
+errors - integer number of tests cases ending in an error
+total - integer sum of the previous 4 values
+earned - integers number of points earned
+possible - integer number of points possible
+
+students structure:
+[
+  {
+    "directory": "example",
+    "email": "example@foobar.com",
+    "username": "example"
+  },
+  {...},
+  ...
+]
+
+directory - string corresponding to the path to the repo on disk
+email - string corresponding to the students email address
+username - string corresponding to the students username
 """
 
 import os

@@ -7,7 +7,10 @@ The methods are roughly grouped by function in separate source files
 
 - controller
 	- autograder - main command line method for the autograder
+	- grade\_project - main grading routine
 	- setup - parse configuration, and configure global state of the autograder
+	- environment - build and prepare test cases
+	- project - enumeration methods
 - source
 	- update - update student repositories
 	- clone - clone new student repositories
@@ -15,10 +18,12 @@ The methods are roughly grouped by function in separate source files
 	- build - build student and autograder source code
 - test - methods for running tests
 	- run - run tests and record the results
-	- parse - parse the output of test restsuls in well-known formats
+	- parse - parse the output of test results in well-known formats
 	- grade - convert parsed results into a score
 - report - methods for reporting test results
 	- reports - generate reports that will be sent out
+	- formatters - format reports that will be sent out
+	- send - send reports to email or files
 
 Process
 --------------------------------------------------------------------------------
@@ -43,18 +48,16 @@ optional dependencies
 - hg - manage mercurial repositories
 - make - used for make based source code builds.
 - svn - manage svn repositories
+- xargs manage svn repositories
+- awk manage svn repositories
 
 ### Create an instance of the Autograder
 To deploy the auto grader:
 
 1. Install dependencies
-2. Copy the autograder directory into the python library directory or modify the
-   PYTHONPATH environmental variable to include the `autograder` directory
-3. Write tests related to the project.  For more on this step see the
-   `developer.markdown` file.
-4. Create a configuration file to specify what tests to run and why
-5. Execute python3 -m autograder /path/to/config.json
-6. Optionally place in crontab or systemd timer
+2. As an administrator run `make install`
+3. Run the autograder via `autograder config.json`
+4. Optionally place in crontab or systemd timer
 
 Data
 --------------------------------------------------------------------------------
@@ -77,8 +80,8 @@ security related features.
 ### Known issues
 
 - The source code based clean methods such as `clean.hg,` `clean.git`, and
-  `clean.svn` do not detect files created in their source code directories: ".hg",
-  ".git", and ".svn" respectively.  This could allow students to store
+  `clean.svn` do not detect files created in their source code directories:
+  ".hg", ".git", and ".svn" respectively.  This could allow students to store
   state between runs of the autograder in the source code repository.  This can
   be mitigated by using the clean.script clean function instead.  The container
   based version should not be vulnerable to this attack.
@@ -105,6 +108,10 @@ security related features.
   from the host network stack.  This will mitigate this form of attack.  If
   network accesses is required, the container's network could be forwarded
   through a proxy to block "illegal" access.
+- Avoid placing source code repositories (git,svn,hg) above the student
+  directories,  They could potentially be reset to an earlier state when
+  performing a clean operation.  This issue is resolved by the container based
+  version.
 
 
 Development
@@ -118,10 +125,9 @@ Development
 
 ### Future work
 
-1.	Python package, rpm, or deb for ease of deployment
-2.	Containerized test environments for running student code
-3.  C library for interfacing with MSP based micro controllers
-4.	Additional well known formats for the parser such as JUnit, python unittest
-5.  Full suite of unittest to verify functionality
-6.  Systemd service file + timer parameterized on config file name
+1.	Containerized test environments for running student code
+2.  C library for interfacing with MSP based micro controllers
+3.	Additional well known formats for the parser such as JUnit, python unittest
+4.  Full suite of unittest to verify functionality
+5.  Systemd service file + timer parameterized on config file name
 

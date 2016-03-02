@@ -1,7 +1,7 @@
 Developer Specification for Script Based Extensions
 ================================================================================
 
-This document summarizes what information
+This document summarizes what information should be included in scripts to extend the autograder.
 
 Build
 --------------------------------------------------------------------------------
@@ -116,11 +116,11 @@ Arbitrary text
 
 JSON formatted dictionary with the following keys should be outputted to stdout:
 
-passed - integer representing the number of tests passed
-failed - integer representing the number of tests failed
-skipped - integer representing the number of tests skipped
-error - integer representing the number of errors that occurred
-total - integer representing the sum of the previous 4 keys
++ passed - integer representing the number of tests passed
++ failed - integer representing the number of tests failed
++ skipped - integer representing the number of tests skipped
++ errors - integer representing the number of errors that occurred
++ total - integer representing the sum of the previous 4 keys
 
 ### Errors
 
@@ -145,8 +145,8 @@ A JSON dictionary that contains the following structure:
 A JSON dictionary that contains the following keys should be outputted to
 stdout:
 
-points\_earned - integer that represents the total number of points earned
-points\_possible - integer that represents the total number of points possible
++ points\_earned - integer that represents the total number of points earned
++ points\_possible - integer that represents the total number of points possible
 
 
 ### Errors

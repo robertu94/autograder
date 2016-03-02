@@ -1,4 +1,12 @@
 # Auto Grader
 
-## Configuration File Specification
-The configuration file for the auto grader is a json dictionary.
+##Setup
+
+1. Install the dependencies
+2. run `make install`
+
+##Documentation
+
+Most of the source code is documented via docstrings, but additional
+documentation can be found in the `docs` directory.
+

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer>
+		<email>fkmclane@gmail.com</email>
+	</maintainer>
+	<use>
+		<flag name="docker">Add support for dockerized testing environments</flag>
+		<flag name="git">Add support for intelligent git checkouts</flag>
+		<flag name="mail">Add support for mailing reports</flag>
+		<flag name="mercurial">Add support for intelligent mercurial checkouts</flag>
+		<flag name="subversion">Add support for intelligent subversion checkouts</flag>
+	</use>
+</pkgmetadata>

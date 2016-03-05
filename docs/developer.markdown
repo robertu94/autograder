@@ -55,7 +55,9 @@ No input is expected
 
 ### Output
 
-No output is expected
+A json dictionary with the following keys:
+
++ changed - a boolean representing if there were updates or not
 
 ### Errors
 

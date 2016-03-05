@@ -50,6 +50,7 @@ settings:
     update:
         method - type of update to use. It can be one of {"git","hg","noop","svn","script"}
         command - when update method is "script" the command to use to clean
+        forced - always run tests after an update
     build:
         method - type of build method to use. It can be one of {"make","script","docker"}
         command - when build method is "script" the command to use to build
@@ -170,10 +171,10 @@ def setup_logging(settings):
                 'propagate' : True,
                 'level': 'DEBUG'
             },
-            'autograder.grade_project': {
+            'autograder.controller': {
                 'handlers': ['console', 'file'],
                 'propagate' : False,
-                'level': 'WARNING'
+                'level': 'INFO'
             },
         },
     }

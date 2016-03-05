@@ -60,8 +60,7 @@ results structure:
 			"points": {...}
 		}
 	],
-        "student2": [...]
-}
+        "student2": [...] }
 
 stdout - ASCII encoded string of the stdout of the process
 stderr - ASCII encoded string of the stderr of the process
@@ -92,6 +91,7 @@ email - string corresponding to the students email address
 username - string corresponding to the students username
 """
 
+import json
 import os
 import logging
 from autograder.source import build, clean, clone, update
@@ -106,25 +106,47 @@ def grade(settings):
     """
     enviroment.prepare_enviroment(settings)
     students = project.enumerate_students(settings)
+    try:
+        with open(settings['project']['name'] + ".json") as results_file:
+            old_results = json.load(results_file)
+    except FileNotFoundError:
+        old_results = {student['username']:None for student in students}
+
     results = {}
     for student in students:
-        result = grade_student(settings, student)
+        result = grade_student(settings, student, old_results.get(student['username']))
         results[student['username']] = result
     for report in project.enumerate_reports(settings):
         reports.reports(report, results, students)
 
-def grade_student(settings, student):
+    with open(settings['project']['name'] + ".json", "w") as results_file:
+        json.dump(results, results_file)
+
+
+
+def grade_student(settings, student, old_results):
     """
     Grade student a specific students work
     """
     if not os.path.exists(student['directory']):
+        LOGGER.info("Downloading student %s", student['username'])
         clone.clone(settings, student)
-    clean.clean(settings, student)
-    update.update(settings, student)
-    results = []
-    for test in project.enumerate_tests(settings):
-        result = run_test(settings, student, test)
-        results.append(result)
+        updated = True
+    else:
+        LOGGER.info("Updating student %s", student['username'])
+        clean.clean(settings, student)
+        updated = update.update(settings, student)
+
+    if settings['update']['forced'] or updated or (old_results is None):
+        LOGGER.info("Running tests for student %s", student['username'])
+        results = []
+        for test in project.enumerate_tests(settings):
+            result = run_test(settings, student, test)
+            results.append(result)
+    else:
+        LOGGER.info("No update for student %s", student['username'])
+        results = old_results
+
     return results
 
 

@@ -2,26 +2,35 @@
   {
     "directory": "student1",
     "email": "runderwood",
-    "username": "student1"
+    "username": "student1",
+    "repo": "repository/student2"
   },
   {
     "directory": "student2",
     "email": "runderwood",
-    "username": "student2"
+    "username": "student2",
+    "repo": "repository/student2"
+
   },
   {
     "directory": "student3",
     "email": "runderwood",
-    "username": "student3"
+    "username": "student3",
+    "repo": "repository/student3"
+
   },
   {
     "directory": "student4",
     "email": "runderwood",
-    "username": "student4"
+    "username": "student4",
+    "repo": "repository/student4"
+
   },
   {
     "directory": "student5",
     "email": "runderwood",
-    "username": "student5"
+    "username": "student5",
+    "repo": "repository/student5"
+
   }
 ]

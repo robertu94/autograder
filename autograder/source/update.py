@@ -7,6 +7,7 @@ This module is part of the Clemson ACM Auto Grader
 
 This module is responsible for cloning and updating repositories.
 """
+import json
 import logging
 import subprocess
 LOGGER = logging.getLogger(__name__)
@@ -36,14 +37,14 @@ def update_hg(settings, student):
 
     #Check if updates exist
     cmd = """
-    hg incomming;
+    hg incoming;
     """
     changed = False
     try:
         subprocess.check_call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
                               shell=True, timeout=timeout, cwd=student['directory'])
     except subprocess.CalledProcessError:
-        changed = True
+        changed = False
 
     #Download and apply updates
     cmd = """
@@ -92,6 +93,9 @@ def update_script(settings, student):
     LOGGER.info('Beginning a script update for student %s', student['username'])
     timeout = int(settings['update']['timeout'])
     cmd = settings['update']['method']
-    subprocess.check_call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+    output = subprocess.check_output(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
                           shell=True, timeout=timeout, cwd=student['directory'])
+    ret = json.loads(output)
+    return ret['changed']
+
 

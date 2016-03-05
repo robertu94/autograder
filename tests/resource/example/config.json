@@ -35,6 +35,19 @@
 			"seperate": true,
 			"summarize": true
 
+		},
+		{
+			"destination": "prof-output.json",
+			"detail": [
+				"results",
+				"points",
+				"output"
+			],
+			"send_method": "file",
+			"formatter_method": "json",
+			"seperate": false,
+			"summarize": false
+
 		}
 	]
 }

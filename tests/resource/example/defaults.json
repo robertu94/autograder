@@ -14,7 +14,7 @@
 			"timeout": 5
 		  },
 		  "build": {
-			"method": "make",
+			"method": "noop",
 			"timeout": 5
 		  }
 	  }
@@ -31,8 +31,12 @@
   },
   "update": {
     "method": "hg",
+	"forced": false,
 	"timeout": 5
-
+  },
+  "clone": {
+    "method": "hg",
+	"timeout": 5
   },
   "build": {
     "method": "make",
@@ -46,11 +50,16 @@
         "output": "json"
       },
       "run": {
+        "input": null,
+        "stderr": "yes",
+        "method": "script",
         "command": ".autograder/files.bats",
 		"timeout": 5
       },
       "score": {
-        "method": "points"
+        "method": "points",
+        "min_points": 0,
+        "free_points": 0
       }
     },
   

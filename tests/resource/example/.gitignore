@@ -2,3 +2,10 @@
 fizzbuzz
 autograder.log
 .autograder
+student1
+student2
+student3
+student4
+student5
+*output.json
+fizzbuzz.json

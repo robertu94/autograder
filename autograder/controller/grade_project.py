@@ -94,6 +94,7 @@ username - string corresponding to the students username
 import json
 import os
 import logging
+import multiprocessing
 from autograder.source import build, clean, clone, update
 from autograder.report import reports
 from autograder.test import run, score, parse
@@ -106,6 +107,7 @@ def grade(settings):
     """
     enviroment.prepare_enviroment(settings)
     students = project.enumerate_students(settings)
+    report_tasks = project.enumerate_reports(settings)
     try:
         with open(settings['project']['name'] + ".json") as results_file:
             old_results = json.load(results_file)
@@ -113,11 +115,11 @@ def grade(settings):
         old_results = {student['username']:None for student in students}
 
     results = {}
-    for student in students:
-        result = grade_student(settings, student, old_results.get(student['username']))
-        results[student['username']] = result
-    for report in project.enumerate_reports(settings):
-        reports.reports(report, results, students)
+    with multiprocessing.Pool() as pool:
+        jobs = [(settings, student, old_results.get(student['username'])) for student in students]
+        ret = pool.starmap(grade_student, jobs)
+        results = {i[0]:i[1] for i in ret}
+        pool.starmap(reports.reports, [(report, results, students) for report in report_tasks])
 
     with open(settings['project']['name'] + ".json", "w") as results_file:
         json.dump(results, results_file)
@@ -147,7 +149,7 @@ def grade_student(settings, student, old_results):
         LOGGER.info("No update for student %s", student['username'])
         results = old_results
 
-    return results
+    return (student['username'], results)
 
 
 def run_test(settings, student, test):

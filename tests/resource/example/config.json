@@ -40,13 +40,12 @@
 			"destination": "prof-output.json",
 			"detail": [
 				"results",
-				"points",
-				"output"
+				"points"
 			],
 			"send_method": "file",
 			"formatter_method": "json",
 			"seperate": false,
-			"summarize": false
+			"summarize": true
 
 		}
 	]

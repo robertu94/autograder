@@ -101,7 +101,10 @@ def run_cmd(cmd, cmd_input=None, cwd=None, timeout=5, stderr=subprocess.PIPE):
         except subprocess.TimeoutExpired:
             failed = True
             process.kill()
-            output, error = process.communicate()
+            try:
+                output, error = process.communicate(timeout=timeout)
+            except subprocess.TimeoutExpired:
+                output, error = "", ""
             stoptime = time.time()
 
     #POSIX specifies return negative the signal that killed the process if it was killed

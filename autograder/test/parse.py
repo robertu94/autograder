@@ -48,7 +48,17 @@ def parse_tap(output, test):
     total = 0
 
     lines = output['stdout'].splitlines()
-    _, total = lines[0].split('..')
+    try:
+        _, total = lines[0].split('..')
+    except IndexError:
+        return {
+            "passed": 0,
+            "failed": 0,
+            "skipped": 0,
+            "errors": 0,
+            "total": 0
+        }
+
     total = int(total)
 
     for line in lines[1:]:

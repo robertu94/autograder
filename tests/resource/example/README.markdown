@@ -7,3 +7,5 @@ Student 2 - Missing makefile
 Student 3 - Missing source file
 Student 4 - No output
 Student 5 - Wrong output
+Student 6 - Floating point error
+Student 7 - Extremely long output

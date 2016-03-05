@@ -25,15 +25,15 @@
 	],
 	"reports": [
 		{
-			"destination": "%u-output.json",
+			"destination": "%u-output.txt",
 			"detail": [
-				"results",
+				"output",
 				"points"
 			],
 			"send_method": "file",
-			"formatter_method": "json",
+			"formatter_method": "text",
 			"seperate": true,
-			"summarize": true
+			"summarize": false
 
 		},
 		{

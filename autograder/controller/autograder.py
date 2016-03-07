@@ -57,6 +57,8 @@ def parse_args():
     parser = argparse.ArgumentParser(prog="Auto Grader")
     parser.add_argument('config_file', type=argparse.FileType('r'),
                         help='A path to the main configuration file')
+    parser.add_argument('-e', '--extra', action="append",
+                        help='Override arguments in the configuration file')
     return parser.parse_args()
 
 if __name__ == "__main__":

@@ -130,6 +130,7 @@ def parse_settings(options):
     with open(DEFAULT_FILE) as default_config:
         defaults = json.load(default_config)
     settings = merge(defaults, settings)
+    settings = apply_options(options, settings)
 
 
     return settings
@@ -197,5 +198,35 @@ def merge(defaults, dictionary):
         except KeyError:
             dictionary[item] = defaults[item]
     return dictionary
+
+def apply_options(options, settings):
+    """
+    Provide override arguments via command line arguments
+    """
+    if options.extra is None:
+        return settings
+
+    for option in options.extra:
+        split = option.split("=")
+        variable = "".join(split[:1])
+        value = json.loads("".join(split[1:]))
+        path = variable.split('.')
+        modify_setting(path, settings, value)
+
+    return settings
+
+def modify_setting(path, settings, value):
+    """
+    Actually change an option in settings
+    """
+    if len(path) == 1:
+        settings[path[0]] = value
+    else:
+        modify_setting(path[1:], settings[path[0]], value)
+
+
+
+
+
 
 

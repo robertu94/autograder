@@ -1,0 +1,52 @@
+{
+	"project": {
+		"file": "students.json",
+		"method": "json",
+		"name": "fizzbuzz",
+		"testdir": "project"
+	},
+	"tests": [
+		{
+			"run": { "command": ".autograder/tests.bats" },
+			"score": {
+				"method": "points",
+				"points_possible": 40,
+				"points_each": 5
+			}
+		},
+		{
+			"run": { "command": ".autograder/files.bats" },
+			"score": {
+				"points_possible": 5,
+				"points_each": 2,
+				"free_points": 1
+			}
+		}
+	],
+	"reports": [
+		{
+			"destination": "%u-output.txt",
+			"detail": [
+				"output",
+				"points"
+			],
+			"send_method": "file",
+			"formatter_method": "text",
+			"seperate": true,
+			"summarize": false
+
+		},
+		{
+			"destination": "prof-output.json",
+			"detail": [
+				"results",
+				"points"
+			],
+			"send_method": "file",
+			"formatter_method": "json",
+			"seperate": false,
+			"summarize": true
+
+		}
+	]
+}

@@ -1,0 +1,71 @@
+{
+  "project": {
+	  "enviroment":{
+		  "prepare": {
+			"method": "hg",
+			"timeout": 5
+		  },
+		  "clean": {
+			"method": "hg",
+			"timeout": 5
+		  },
+		  "update": {
+			"method": "hg",
+			"timeout": 5
+		  },
+		  "build": {
+			"method": "noop",
+			"timeout": 5
+		  }
+	  }
+  },
+  "clean": {
+    "method": "hg",
+	"timeout": 5
+
+  },
+  "prepare": {
+    "method": "hg",
+	"timeout": 5
+
+  },
+  "update": {
+    "method": "hg",
+	"forced": false,
+	"timeout": 5
+  },
+  "clone": {
+    "method": "hg",
+	"timeout": 5
+  },
+  "build": {
+    "method": "make",
+	"timeout": 5
+  },
+  "tests": 
+    {
+      "parse": {
+        "input": "json",
+        "method": "tap",
+        "output": "json"
+      },
+      "run": {
+        "input": null,
+        "stderr": "yes",
+        "method": "script",
+        "command": ".autograder/files.bats",
+		"timeout": 5
+      },
+      "score": {
+        "method": "points",
+        "min_points": 0,
+        "free_points": 0
+      }
+    },
+  
+  "logging": {
+    "console_verbosity": "DEBUG",
+    "file_verbosity": "DEBUG",
+    "logfile": "autograder.log"
+  }
+}

@@ -26,7 +26,7 @@ def build(settings, student, building_test_cases=False):
         build_prepare(settings, student)
     try:
         builder[settings['build']['method']](settings, student)
-    except:
+    except subprocess.CalledProcessError:
         LOGGER.warning("build for student %s failed" % student['username'])
 
 def build_prepare(settings, student):
@@ -70,15 +70,14 @@ def build_docker(settings, student):
     """
     LOGGER.info('Beginning a Docker build for student %s', student['username'])
 
-    cmd = 'docker build -t {student}_{project}'
-    cmd = cmd.format(studnet=student['username'], project=settings['project']['name'])
+    
+    cmd = 'docker build -t {student}_{project} --file={dockerfile} .'
+    cmd = cmd.format(student=student['username'], project=settings['project']['name'],
+                     dockerfile=settings['build']['dockerfile'])
     timeout = int(settings['build']['timeout']) or None
 
-    #prepare build directory
-    shutil.copyfile(settings['build']['dockerfile'], student['directory'])
-
-
-    subprocess.check_call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+    LOGGER.info(cmd)
+    subprocess.check_call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True,
                           timeout=timeout, cwd=student['directory'])
     LOGGER.info('Completed a Docker build for student %s', student['username'])
 

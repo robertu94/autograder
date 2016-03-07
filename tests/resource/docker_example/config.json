@@ -5,9 +5,22 @@
 		"name": "fizzbuzz",
 		"testdir": "project"
 	},
+	"clean": {
+		"method": "noop"
+	},
+	"build": {
+		"method": "docker",
+		"dockerfile": ".autograder/Dockerfile",
+		"timeout": 10
+	},
 	"tests": [
 		{
-			"run": { "command": ".autograder/tests.bats" },
+			"run": { 
+				"method": "docker",
+				"command": "/autograder/tests/runner.sh /autograder/tests/tests.bats",
+				"constraints": "--net=none",
+				"timeout": 10
+			},
 			"score": {
 				"method": "points",
 				"points_possible": 40,
@@ -15,7 +28,12 @@
 			}
 		},
 		{
-			"run": { "command": ".autograder/files.bats" },
+			"run": { 
+				"method": "docker",
+				"command": "/autograder/tests/runner.sh /autograder/tests/files.bats",
+				"constraints": "--net=none",
+				"timeout": 10
+			},
 			"score": {
 				"points_possible": 5,
 				"points_each": 2,

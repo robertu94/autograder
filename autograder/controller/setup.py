@@ -34,9 +34,9 @@ This module also configures logging
 
 settings:
     project:
-        method - method of enumerating class. It can be one of {"discover","json","csv","manual"}
+        method - method of enumerating class. It can be one of {"discover","json","csv"}
         file - if method is "csv" or "json" the list of list of student usernames
-        student - if method is "manual" a json dictionary corresponding to the student
+        student - a pattern to match for a subset of student usernames to run; if unspecified, then all usernames run
         name - name of the project
         testdir - directory of files that should be copied into the build
             directory.  They will be copied into a '.autograder' directory at the
@@ -209,7 +209,7 @@ def apply_options(options, settings):
     for option in options.extra:
         split = option.split("=")
         variable = "".join(split[:1])
-        value = json.loads("".join(split[1:]))
+        value = convert("".join(split[1:]))
         path = variable.split('.')
         modify_setting(path, settings, value)
 
@@ -223,6 +223,27 @@ def modify_setting(path, settings, value):
         settings[path[0]] = value
     else:
         modify_setting(path[1:], settings[path[0]], value)
+
+def convert(obj):
+    """
+    convert some common types
+    """
+    if obj.lower() == "none":
+        return None
+    if obj.lower() == "false":
+        return False
+    if obj.lower() == "true":
+        return True
+    try:
+        return int(obj)
+    except ValueError:
+        pass
+    try:
+        return float(obj)
+    except ValueError:
+        pass
+    return obj
+
 
 
 

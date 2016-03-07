@@ -33,6 +33,7 @@ This module is contains the enumeration methods
 """
 import csv
 import json
+import re
 
 def enumerate_reports(settings):
     """
@@ -53,9 +54,15 @@ def enumerate_students(settings):
     STUDENTS = {
         "json": enumerate_students_json,
         "csv": enumerate_students_csv,
-        "manual": enumerate_students_manual
     }
-    return STUDENTS[settings['project']['method']](settings)
+    students = STUDENTS[settings['project']['method']](settings)
+    try:
+        pattern = settings['project']['student']
+    except KeyError:
+        return students
+    else:
+        return [student for student in students if re.match(pattern, student['username'])]
+
 
 def enumerate_tests(settings):
     """
@@ -86,12 +93,6 @@ def enumerate_students_csv(settings):
         for student in reader:
             students.append(student)
     return students
-
-def enumerate_students_manual(settings):
-    """
-    returns a list of a single student
-    """
-    return json.loads(settings['project']['student'])
 
 def enumerate_students_discover(settings):
     """

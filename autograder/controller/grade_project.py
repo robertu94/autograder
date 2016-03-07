@@ -115,7 +115,7 @@ def grade(settings):
         old_results = {student['username']:None for student in students}
 
     results = {}
-    with multiprocessing.Pool() as pool:
+    with multiprocessing.Pool(processes=settings['project']['multiprocess']) as pool:
         jobs = [(settings, student, old_results.get(student['username'])) for student in students]
         ret = pool.starmap(grade_student, jobs)
         results = {i[0]:i[1] for i in ret}

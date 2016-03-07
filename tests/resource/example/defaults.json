@@ -1,5 +1,6 @@
 {
   "project": {
+	  "multiprocess": null,
 	  "enviroment":{
 		  "prepare": {
 			"method": "hg",

@@ -3,7 +3,19 @@
 		"file": "students.json",
 		"method": "json",
 		"name": "fizzbuzz",
-		"testdir": "project"
+		"testdir": "project",
+		"enviroment":{
+			"project": {
+				"name":"fizzbuzz"
+			},
+			"build":{
+				"method": "docker",
+				"dockerfile": "DockerfileProject",
+				"dockerignore": "project/.dockerignore",
+				"timeout": null
+			}
+
+		}
 	},
 	"clean": {
 		"method": "noop"
@@ -11,7 +23,8 @@
 	"build": {
 		"method": "docker",
 		"dockerfile": ".autograder/Dockerfile",
-		"timeout": 10
+		"dockerignore": ".autograder/.dockerignore",
+		"timeout": null
 	},
 	"tests": [
 		{
@@ -32,7 +45,7 @@
 				"method": "docker",
 				"command": "/autograder/tests/runner.sh /autograder/tests/files.bats",
 				"constraints": "--net=none",
-				"timeout": 10
+				"timeout": 30
 			},
 			"score": {
 				"points_possible": 5,

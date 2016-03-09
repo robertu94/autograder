@@ -1,4 +1,4 @@
-#!/usr/bin/env bats
+#!/usr/local/bin/bats -t
 
 @test "Makefile exists" {
 	run test -f 'Makefile'

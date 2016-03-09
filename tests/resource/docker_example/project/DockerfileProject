@@ -3,10 +3,9 @@ FROM ubuntu:12.04
 MAINTAINER Robert Underwood <rr.underwood94@gmail.com>
 
 #Update to latest versions
-RUN apt-get update && apt-get upgrade -y
-
-#Install expected dependancies
-RUN apt-get install -y make clang g++ gcc git
+RUN apt-get update && \
+    apt-get upgrade -y && \
+	apt-get install -y make clang g++ gcc git
 
 #Install testing dependancies
 RUN git clone https://github.com/sstephenson/bats.git

@@ -1,3 +1,3 @@
-FROM autograder_project
+FROM project_fizzbuzz
 
 ADD * /autograder/

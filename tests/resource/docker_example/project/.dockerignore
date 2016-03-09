@@ -1,3 +1,4 @@
 .hg
 Dockerfile
 DockerfileProject
+.autograder

@@ -1,4 +1,4 @@
-#!/usr/bin/env bats
+#!/usr/local/bin/bats -t
 
 @test "testcase 1" {
 	run ./fizzbuzz 1

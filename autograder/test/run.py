@@ -66,7 +66,7 @@ def run_docker(settings, student, test):
     timeout = test['run']['timeout']
     #TODO eventually accept a dictionary instead of a sequence of flags
     constraints = test['run']['constraints']
-    cmd = "docker run {constraints} {container} {command}"
+    cmd = "docker run --rm {constraints} {container} {command}"
     cmd = cmd.format(command=command, container=container, constraints=constraints)
     LOGGER.debug(cmd)
 

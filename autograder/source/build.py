@@ -10,6 +10,7 @@ import logging
 import subprocess
 import shutil
 import os
+
 LOGGER = logging.getLogger(__name__)
 
 def build(settings, student, building_test_cases=False):
@@ -39,6 +40,16 @@ def build_prepare(settings, student):
     except FileNotFoundError:
         pass #autograder files may not exist yet
     shutil.copytree(settings['project']['testdir'], auto_grader_directory)
+
+
+    #Copy the docker ignore file
+    try:
+        studentdir = os.path.join(student['directory'], settings['build']['dockerignore'])
+    except KeyError:
+        pass
+    else:
+        shutil.copy(studentdir, student['directory'])
+
 
 def build_script(settings, student):
     """
@@ -70,13 +81,15 @@ def build_docker(settings, student):
     """
     LOGGER.info('Beginning a Docker build for student %s', student['username'])
 
-    
+
+
     cmd = 'docker build -t {student}_{project} --file={dockerfile} .'
     cmd = cmd.format(student=student['username'], project=settings['project']['name'],
                      dockerfile=settings['build']['dockerfile'])
-    timeout = int(settings['build']['timeout']) or None
+    timeout = settings['build']['timeout']
 
     LOGGER.info(cmd)
+
     subprocess.check_call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True,
                           timeout=timeout, cwd=student['directory'])
     LOGGER.info('Completed a Docker build for student %s', student['username'])

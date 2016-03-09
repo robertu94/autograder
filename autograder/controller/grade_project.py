@@ -138,6 +138,7 @@ def grade_student(settings, student, old_results):
         LOGGER.info("Updating student %s", student['username'])
         clean.clean(settings, student)
         updated = update.update(settings, student)
+        build.build(settings, student)
 
     if settings['update']['forced'] or updated or (old_results is None):
         LOGGER.info("Running tests for student %s", student['username'])
@@ -156,8 +157,10 @@ def run_test(settings, student, test):
     """
     Run a test on a students work
     """
-    clean.clean(settings, student)
-    build.build(settings, student)
+    if settings['clean']['method'] != "docker":
+        clean.clean(settings, student)
+    if settings['build']['method'] != "docker":
+        build.build(settings, student)
     output = run.run(settings, student, test)
     result = parse.parse(output, test)
     points = score.score(result, output, test)

@@ -8,7 +8,7 @@ setup(name="autograder",
       author="Robert Underwood",
       author_email="rr.underwood94@gmail.com",
       classifiers=[
-          "Development Status :: 2 - Pre-Alpha",
+          "Development Status :: 3 - Alpha",
           "Intended Audience :: Education",
           "Intended Audience :: Developers",
           "License :: OSI Approved :: BSD License",
@@ -20,6 +20,9 @@ setup(name="autograder",
       entry_points={
           'console_scripts': ['autograder=autograder.controller.autograder:main']
       },
+      install_requires=[
+          'PyYAML'
+      ],
       keywords="autograder education docker",
       license="bsd",
       long_description=readme(),
@@ -29,9 +32,10 @@ setup(name="autograder",
           'autograder.report',
           'autograder.test',
           'autograder.source'
+          'autograder.discover'
           ],
       url="https://www.cs.clemson.edu/acm",
-      version="0.0.1",
+      version="0.3.0",
       zip_safe=False
      )
 

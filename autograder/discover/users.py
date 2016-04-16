@@ -29,20 +29,13 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-This module is contains the enumeration methods
+This module is contains the enumeration methods for users
 """
 import csv
 import json
 import re
 
-def enumerate_reports(settings):
-    """
-    Returns a list of all reports that can be detected for the project
-
-    return:
-        reports[] - list of reports that will be produced
-    """
-    return settings['reports']
+from autograder.discover import handin
 
 def enumerate_students(settings):
     """
@@ -54,6 +47,7 @@ def enumerate_students(settings):
     STUDENTS = {
         "json": enumerate_students_json,
         "csv": enumerate_students_csv,
+        "discover": enumerate_students_discover,
     }
     students = STUDENTS[settings['project']['method']](settings)
     try:
@@ -63,40 +57,28 @@ def enumerate_students(settings):
     else:
         return [student for student in students if re.match(pattern, student['username'])]
 
-
-def enumerate_tests(settings):
-    """
-    Returns a list of all tests that can be detected for the project
-
-    return:
-        tests[] - list of tests that will be run
-    """
-    return settings['tests']
-
 def enumerate_students_json(settings):
     """
     Return a list of students by reading a json file
     """
     with open(settings['project']['file']) as infile:
-        students = json.load(infile)
-    return students
+        return json.load(infile)
 
 def enumerate_students_csv(settings):
     """
-    Return a list of students by reading a json file
+    Return a list of students by reading a csv file
     """
-    students = []
     with open(settings['project']['file']) as infile:
         dialect = csv.Sniffer().sniff(infile.read(1024))
         infile.seek(0)
-        reader = csv.DictReader(infile, dialect=dialect)
-        for student in reader:
-            students.append(student)
-    return students
+        return list(csv.DictReader(infile, dialect=dialect))
 
 def enumerate_students_discover(settings):
     """
     Automatically determine students using when used with Handin
     """
-    raise NotImplementedError
+    DISCOVER = {
+        "handin": handin.discover
+    }
+    return DISCOVER[settings['project']['discovery']['framework']](settings)
 

@@ -98,7 +98,8 @@ import multiprocessing
 from autograder.source import build, clean, clone, update
 from autograder.report import reports
 from autograder.test import run, score, parse
-from autograder.controller import enviroment, project
+from autograder.controller import enviroment
+from autograder.discover import users, tests, reporters
 LOGGER = logging.getLogger(__name__)
 
 def grade(settings):
@@ -106,13 +107,10 @@ def grade(settings):
     Grade all of the projects
     """
     enviroment.prepare_enviroment(settings)
-    students = project.enumerate_students(settings)
-    report_tasks = project.enumerate_reports(settings)
-    try:
-        with open(settings['project']['name'] + ".json") as results_file:
-            old_results = json.load(results_file)
-    except FileNotFoundError:
-        old_results = {student['username']:None for student in students}
+    students = users.enumerate_students(settings)
+    report_tasks = reporters.enumerate_reports(settings)
+
+    old_results = load_old_results(settings, students)
 
     results = {}
     with multiprocessing.Pool(processes=settings['project']['multiprocess']) as pool:
@@ -124,7 +122,16 @@ def grade(settings):
     with open(settings['project']['name'] + ".json", "w") as results_file:
         json.dump(results, results_file)
 
-
+def load_old_results(settings, students):
+    """
+    load the old results file or a dictionary of all students if it doesn't exists
+    """
+    try:
+        with open(settings['project']['name'] + ".json") as results_file:
+            old_results = json.load(results_file)
+    except FileNotFoundError:
+        old_results = {student['username']:None for student in students}
+    return old_results
 
 def grade_student(settings, student, old_results):
     """
@@ -143,7 +150,7 @@ def grade_student(settings, student, old_results):
     if settings['update']['forced'] or updated or (old_results is None):
         LOGGER.info("Running tests for student %s", student['username'])
         results = []
-        for test in project.enumerate_tests(settings):
+        for test in tests.enumerate_tests(settings):
             result = run_test(settings, student, test)
             results.append(result)
     else:

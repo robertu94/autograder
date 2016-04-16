@@ -1,4 +1,4 @@
-.PHONY: clean
+.PHONY: clean tags develop install
 tags: $(wildcard **/*.py)
 	ctags $(wildcard **/*.py)
 clean:

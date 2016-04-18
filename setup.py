@@ -31,7 +31,7 @@ setup(name="autograder",
           'autograder.controller',
           'autograder.report',
           'autograder.test',
-          'autograder.source'
+          'autograder.source',
           'autograder.discover'
           ],
       url="https://www.cs.clemson.edu/acm",

@@ -1,5 +1,6 @@
 include LICENCE
 include README.md
 include docs/*.markdown
-include tests/scripts/*
-include tests/resources/*
+recursive-include tests/scripts *
+recursive-include tests/resource *
+recursive-include share *

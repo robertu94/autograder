@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily run of the Autograder
+
+[Timer]
+OnCalendar=*-*-* 17:00:00
+AccuracySec=30min
+
+[Install]
+WantedBy=multi-user.target
+

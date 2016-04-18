@@ -1,0 +1,6 @@
+[Unit]
+Description=Autograder Task
+
+
+[Service]
+ExecStart=/usr/bin/autograder %i

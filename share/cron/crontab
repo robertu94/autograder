@@ -1,0 +1,5 @@
+SHELL=/bin/bash
+PATH=/usr/bin:/usr/local/bin:/bin:/sbin
+MAILTO=autograder
+
+0 17 * * * /usr/bin/autograder /path/to/config.json

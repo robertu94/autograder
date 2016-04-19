@@ -145,10 +145,10 @@ def grade_student(settings, student, old_results):
         LOGGER.info("Updating student %s", student['username'])
         clean.clean(settings, student)
         updated = update.update(settings, student)
-        build.build(settings, student)
 
     if settings['update']['forced'] or updated or (old_results is None):
         LOGGER.info("Running tests for student %s", student['username'])
+        build.build(settings, student)
         results = []
         for test in tests.enumerate_tests(settings):
             result = run_test(settings, student, test)

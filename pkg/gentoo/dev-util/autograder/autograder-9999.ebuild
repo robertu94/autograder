@@ -21,7 +21,7 @@ HOMEPAGE="https://www.cs.clemson.edu/acm"
 
 LICENSE="BSD"
 SLOT="0"
-IUSE="docker git mail mercurial subversion"
+IUSE="doc docker git mail mercurial subversion"
 
 RDEPEND="
 	docker? ( app-emulation/docker )
@@ -29,5 +29,25 @@ RDEPEND="
 	mail? ( virtual/mta )
 	mercurial? ( dev-vcs/mercurial )
 	subversion? ( dev-vcs/subversion )
+
+	doc? ( app-text/pandoc )
 "
 DEPEND=""
+
+src_prepare() {
+	if use doc; then
+		pandoc -t html -s docs/architecture.markdown -o docs/architecture.html
+		pandoc -t html -s docs/developer.markdown -o docs/developer.html
+	fi
+
+	distutils-r1_src_prepare
+}
+
+src_install() {
+	if use doc; then
+		dodoc docs/architecture.html
+		dodoc docs/developer.html
+	fi
+
+	distutils-r1_src_install
+}

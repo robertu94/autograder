@@ -33,7 +33,7 @@ results are processed in serial fashion.
 Deployment
 --------------------------------------------------------------------------------
 
-### Dependancies
+### Dependencies
 
 Dependencies
 - python3

@@ -112,7 +112,7 @@ def student_from_username(settings, bucket_name, username, needs_grading=True):
     base_repo = settings['project']['discovery']['repo']
 
     return {
-        "directory": os.path.join(directory, "assignment", assignment, username),
+        "directory": os.path.join(directory, "assignments", assignment, username),
         "email": "{username}@{domain}".format(username=username, domain=domain),
         "username": username,
         "repo": os.path.join(base_repo, "assignments", assignment, bucket_name),

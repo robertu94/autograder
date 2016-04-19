@@ -33,7 +33,7 @@ results are processed in serial fashion.
 Deployment
 --------------------------------------------------------------------------------
 
-### Dependancies
+### Dependencies
 
 Dependencies
 - python3
@@ -48,8 +48,8 @@ optional dependencies
 - hg - manage mercurial repositories
 - make - used for make based source code builds.
 - svn - manage svn repositories
-- xargs manage svn repositories
-- awk manage svn repositories
+- xargs - manage svn repositories
+- awk - manage svn repositories
 
 ### Create an instance of the Autograder
 To deploy the auto grader:

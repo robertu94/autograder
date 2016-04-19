@@ -70,6 +70,9 @@ def discover(settings):
     assignment_name = settings['project']['discovery']['assignment']
     if not os.path.exists(project_directory):
         clone_metadata(settings)
+        #We are going to unintentionally update all repos when we clone them
+        #So we need to force an update here.
+        settings['update']['forced'] = True
     else:
         update_metadata(settings)
 

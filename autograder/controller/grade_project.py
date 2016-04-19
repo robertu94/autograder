@@ -106,15 +106,21 @@ def grade(settings):
     """
     Grade all of the projects
     """
+    LOGGER.info("Preparing environment")
     enviroment.prepare_enviroment(settings)
+    LOGGER.info("Determining users")
     students = users.enumerate_students(settings)
+    LOGGER.info("Determining tests")
+    test_cases = tests.enumerate_tests(settings)
+    LOGGER.info("Determining reports")
     report_tasks = reporters.enumerate_reports(settings)
 
     old_results = load_old_results(settings, students)
 
     results = {}
     with multiprocessing.Pool(processes=settings['project']['multiprocess']) as pool:
-        jobs = [(settings, student, old_results.get(student['username'])) for student in students]
+        jobs = [(settings, student, old_results.get(student['username']), test_cases) \
+                for student in students]
         ret = pool.starmap(grade_student, jobs)
         results = {i[0]:i[1] for i in ret}
         pool.starmap(reports.reports, [(report, results, students) for report in report_tasks])
@@ -133,7 +139,7 @@ def load_old_results(settings, students):
         old_results = {student['username']:None for student in students}
     return old_results
 
-def grade_student(settings, student, old_results):
+def grade_student(settings, student, old_results, test_cases):
     """
     Grade student a specific students work
     """
@@ -150,7 +156,7 @@ def grade_student(settings, student, old_results):
         LOGGER.info("Running tests for student %s", student['username'])
         build.build(settings, student)
         results = []
-        for test in tests.enumerate_tests(settings):
+        for test in test_cases:
             result = run_test(settings, student, test)
             results.append(result)
     else:

@@ -33,7 +33,7 @@ def update_hg(settings, student):
     Updates a Mercurial repository with the latest submission
     """
     LOGGER.info('Beginning a HG update for student %s', student['username'])
-    timeout = int(settings['update']['timeout'])
+    timeout = settings['update']['timeout']
 
     #Check if updates exist
     cmd = """
@@ -62,7 +62,7 @@ def update_git(settings, student):
     Updates a Git repository with the latest submission
     """
     LOGGER.info('Beginning a git update for student %s', student['username'])
-    timeout = int(settings['update']['timeout'])
+    timeout = settings['update']['timeout']
     cmd = """
     git pull -f -Xtheirs;
     """
@@ -84,14 +84,15 @@ def update_svn(settings, student):
     Updates a SVN repository with the latest submission
     """
     LOGGER.info('Beginning a svn update for student %s', student['username'])
-    timeout = int(settings['update']['timeout'])
+    timeout = settings['update']['timeout']
+    raise NotImplementedError
 
 def update_script(settings, student):
     """
     Updates a SVN repository with the latest submission
     """
     LOGGER.info('Beginning a script update for student %s', student['username'])
-    timeout = int(settings['update']['timeout'])
+    timeout = settings['update']['timeout']
     cmd = settings['update']['method']
     output = subprocess.check_output(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
                           shell=True, timeout=timeout, cwd=student['directory'])

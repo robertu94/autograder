@@ -55,7 +55,8 @@ def update_metadata(settings):
     Clones metadata for the first time
     """
     discovery_settings = {
-        "clone": {
+        "update": {
+            "timeout": None,
             "method": "hg"
         }
     }
@@ -67,7 +68,7 @@ def discover(settings):
     """
     project_directory = settings['project']['discovery']['directory']
     assignment_name = settings['project']['discovery']['assignment']
-    if os.path.exists(project_directory):
+    if not os.path.exists(project_directory):
         clone_metadata(settings)
     else:
         update_metadata(settings)
@@ -88,16 +89,16 @@ def discover(settings):
         *[assignment_manifest['buckets'][bucket] for bucket in assignment_manifest['buckets']]))
     ungrouped_students = students_usernames - shared_buckets_users
 
-    student_objects = {}
+    student_objects = []
     for student in ungrouped_students:
-        student_objects[student] = student_from_username(settings, student, student)
+        student_objects.append(student_from_username(settings, student, student))
     for bucket in assignment_manifest['buckets']:
         needs_grading = True
         for student in assignment_manifest['buckets'][bucket]:
             if student in student_objects:
                 raise RuntimeError("Students must be uniquely mapped to a bucket")
-            student_objects[student] = \
-                    student_from_username(settings, bucket, student, needs_grading)
+            student_objects.append(
+                student_from_username(settings, bucket, student, needs_grading))
             needs_grading = False
     return student_objects
 
@@ -114,7 +115,7 @@ def student_from_username(settings, bucket_name, username, needs_grading=True):
         "directory": os.path.join(directory, "assignment", assignment, username),
         "email": "{username}@{domain}".format(username=username, domain=domain),
         "username": username,
-        "repo": os.path.join(base_repo, "assignment", assignment, bucket_name),
+        "repo": os.path.join(base_repo, "assignments", assignment, bucket_name),
         "needs_grading": needs_grading
     }
 

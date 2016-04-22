@@ -1,6 +1,4 @@
-include LICENCE
+include LICENSE
 include README.md
-include docs/*.markdown
-recursive-include tests/scripts *
-recursive-include tests/resource *
+include docs/*.rst
 recursive-include share *

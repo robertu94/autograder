@@ -56,10 +56,10 @@ Optional dependencies
 
 - `awk` - manage svn repositories
 - `date` - used in unit test code
-- `docker` - container based test environments
-- `cgroup-lite` - container based test environments on Ubuntu
+- `docker >= 1.9` - container based test environments.
+- `cgroup-lite` - Ubuntu 14.04 incorrectly lists this an optional dependency for docker
 - `git` - manage git repositories
-- `hg` - manage mercurial repositories
+- `hg >= 3.1` - manage mercurial repositories
 - `make` - used for make based source code builds.
 - `svn` - manage svn repositories
 - `xargs` - manage svn repositories

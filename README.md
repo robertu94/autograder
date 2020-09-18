@@ -1,5 +1,7 @@
 # Auto Grader
 
+This project is archived and will not be continued.
+
 ##Setup
 
 1. Install the dependencies
